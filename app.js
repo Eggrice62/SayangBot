@@ -1301,10 +1301,7 @@ const handleMessage = (message, client) => {
 								console.log(midiArray.track[itrack].event[ievent].data);
 							}
 						} else if (midiArray.track[itrack].event[ievent].type == 12) {
-							ichannel = midiArray.track[itrack].event[ievent].channel+iPort[itrack]*16;
-							targetPatch = midiArray.track[itrack].event[ievent].data;
-							if (ichannel%16 == 9) { targetPatch = 128; }
-							currentchannelinstrument[ichannel] = currentchannelinstrument[ichannel].concat([[currentTime, targetPatch]]);
+							// instrument (moved below)
 						} else if (midiArray.track[itrack].event[ievent].type == 9) {
 							if (midiArray.track[itrack].event[ievent].data[1] > 0) {
 								ichannel = midiArray.track[itrack].event[ievent].channel+iPort[itrack]*16;
@@ -1354,6 +1351,11 @@ const handleMessage = (message, client) => {
 								currentTempoIndex++;
 								currentTempo = thisTempo;
 							}
+						} else if (midiArray.track[itrack].event[ievent].type == 12) {
+							ichannel = midiArray.track[itrack].event[ievent].channel+iPort[itrack]*16;
+							targetPatch = midiArray.track[itrack].event[ievent].data;
+							if (ichannel%16 == 9) { targetPatch = 128; }
+							currentchannelinstrument[ichannel] = currentchannelinstrument[ichannel].concat([[currentTime, targetPatch]]);
 						}
 					}
 				}
