@@ -1,13 +1,13 @@
 # SayangBot
 
-![프로필 이미지](https://imgur.com/2SaAubX)  
+![](./image/201218sayang.png)  
 메이플스토리2 악보를 간편하게 만들 수 있는 프로그램 (Discord 봇) 입니다.  
 미디 파일을 메이플스토리2 악보로 즉시 바꾸어 줍니다.  
 메이플 월드의 새로운 음악가가 되어 보세요!  
 This is a Discord bot that allows you to easily create MapleStory 2 sheet music.  
 This bot instantly converts MIDI files into MapleStory 2 sheet music.  
 Become a new musician in Maple World!  
-![](https://imgur.com/mnjxZZ9)
+![](./image/sendmidi.png)
 
 # 설치 / Setup
 
@@ -20,7 +20,8 @@ This program works with Discord. Log in to Discord, a convenient game messenger 
 ## Discord 서버 준비 / Prepare your Discord server
 
 SayangBot을 초대할 서버가 있어야 합니다. 없으시더라도 Discord에서 10초면 만들 수 있습니다.  
-You must have a server to invite SayangBot to. Even if you don't have one, you can create one on Discord in 10 seconds.
+You must have a server to invite SayangBot to. Even if you don't have one, you can create one on Discord in 10 seconds.  
+![](./image/addserver.png)
 
 ## SayangBot 초대하기 / Invite SayangBot
 
@@ -30,6 +31,7 @@ https://discord.com/oauth2/authorize?client_id=886956440361791499&permissions=0&
 
 ## 설치 완료! / Installation is complete
 
+![](./image/online.png)  
 이제부터 SayangBot이 음악가님을 위해 악보를 만들어 줄 것입니다.  
 From now on, SayangBot will create sheet music for you.
 
@@ -47,11 +49,13 @@ Search for MIDI on Google, etc., or find it on specialized sites such as Musesco
 
 ## 미디 파일 업로드 / Upload MIDI file
 
+![](./image/sendmidi3.png)  
 SayangBot이 있는 Discord 서버에 미디 파일을 올리시면, SayangBot이 자동으로 인식하여 작동을 준비합니다.  
 Just upload your MIDI file to the Discord server with SayangBot, and SayangBot will automatically recognize it and prepare to operate.
 
 ## 미디 파일 내용 확인 / Check MIDI file contents
 
+![](./image/info.png)  
 Discord 채팅으로 %정보 라고 입력해 보세요.  
 미디 파일의 BPM, 재생 시간, 사용 악기, 텍스트 메모 등을 간단히 확인할 수 있습니다.  
 Try entering %info in Discord chat.  
@@ -59,6 +63,7 @@ You can easily check a MIDI file's BPM, duration, instrument used, text notes, a
 
 ## 악보 작성 (독주) / Converting into sheet music (solo)
 
+![](./image/sendmidi.png)  
 Discord 채팅으로 %악보 라고 입력해 보세요.  
 혼자 연주할 수 있는 악보가 제작됩니다.  
 Try typing %solo in Discord chat.  
@@ -66,6 +71,7 @@ A sheet music that can be played alone is produced.
 
 ## 악보 작성 (합주) / Converting into sheet music (ensemble)
 
+![](./image/sendmidi2new.png)  
 Discord 채팅으로 %합주악보 라고 입력해 보세요.  
 파티원들과 합주를 할 수 있도록 악기별 악보가 따로따로 제작됩니다.  
 Try typing %ensemble in Discord chat.  
@@ -73,6 +79,7 @@ Sheet music for each instrument is produced separately so that you can perform w
 
 ## 악보 사용법 / How to use sheet music
 
+![](./image/import.png)  
 빈 악보를 더블클릭하여 악보 제작 화면을 열고, 우측 하단의 파일 불러오기 버튼으로 방금 만들어진 ms2mml 파일을 가져옵니다.  
 Double-click the blank sheet to open the sheet music creation screen, and import the just created ms2mml file by clicking the "파일 불러오기" button at the bottom right.
 
@@ -108,8 +115,10 @@ SayangBot is in beta testing starting on September 24, 2021, and today, develope
 # 피드백 보내기 / Feedback
 
 SayangBot이 있는 Discord 서버에서 %피드백 <하실 말씀> 을 입력하면 개발자에게 전송됩니다.  
+혹은 Discord에서 계란밥#9331 으로 연락주셔도 괜찮습니다.  
 자유롭게 적어서 보내주시면 개발에 큰 도움이 됩니다. 감사합니다.  
 Enter %feedback "what you want to say" on the Discord server with SayangBot and it will be sent to the developer.  
+Or you can contact me on Discord (계란밥#9331).  
 It will be a great help for development. thank you.
 
 # 업데이트 내역
