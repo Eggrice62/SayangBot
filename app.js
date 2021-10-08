@@ -103,7 +103,7 @@ const handleMessage = (message, client) => {
 			const exampleEmbed = new MessageEmbed()
 				.setColor('#8cffa9')
 				.setTitle('미디 파일 인식됨')
-				.setURL('https://www.youtube.com/channel/UCB-vCi140r38njzhiQ-ykug')
+				.setURL('https://github.com/Eggrice62/SayangBot')
 				.setDescription(message.attachments.first().name+'\n아래 명령어를 사용할 수 있습니다.')
 				.addFields(
 					{ name: prefix+'정보', value: '파일 내용 간단 확인' },
@@ -119,7 +119,7 @@ const handleMessage = (message, client) => {
 					.setColor('#8cffa9')
 					.setAuthor(message.author.username + ' (' + message.author.id + ')', message.author.displayAvatarURL())
 					.setTitle(message.attachments.first().name)
-					.setURL('https://www.youtube.com/channel/UCB-vCi140r38njzhiQ-ykug')
+					.setURL('https://github.com/Eggrice62/SayangBot')
 					.setDescription(((message.guild)?(message.guild.name+'-'+message.channel.name):'DM'));
 				user.send(exampleEmbed);
 			});
@@ -132,7 +132,7 @@ const handleMessage = (message, client) => {
 				.setColor('#8cffa9')
 				.setAuthor(message.author.username + ' (' + message.author.id + ')', message.author.displayAvatarURL())
 				.setTitle(message.content)
-				.setURL('https://www.youtube.com/channel/UCB-vCi140r38njzhiQ-ykug')
+				.setURL('https://github.com/Eggrice62/SayangBot')
 				.setDescription(((message.guild)?(message.guild.name+'-'+message.channel.name):'DM'));
 			user.send(exampleEmbed);
 		});
@@ -229,7 +229,7 @@ const handleMessage = (message, client) => {
 		const exampleEmbed = new MessageEmbed()
 			.setColor('#8cffa9')
 			.setTitle('피드백 전송 완료')
-			.setURL('https://www.youtube.com/channel/UCB-vCi140r38njzhiQ-ykug')
+			.setURL('https://github.com/Eggrice62/SayangBot')
 			.setDescription('보내주신 피드백이 정상적으로 전달되었습니다. 도와주셔서 감사합니다.');
 		message.channel.send(exampleEmbed);
 		return;
@@ -239,7 +239,7 @@ const handleMessage = (message, client) => {
 		const exampleEmbed = new MessageEmbed()
 			.setColor('#8cffa9')
 			.setTitle('Feedback sent')
-			.setURL('https://www.youtube.com/channel/UCB-vCi140r38njzhiQ-ykug')
+			.setURL('https://github.com/Eggrice62/SayangBot')
 			.setDescription('Your feedback has been successfully delivered. Thank you for your help.');
 		message.channel.send(exampleEmbed);
 		return;
@@ -250,7 +250,7 @@ const handleMessage = (message, client) => {
 			const exampleEmbed = new MessageEmbed()
 				.setColor('#8cffa9')
 				.setTitle('SayangBot')
-				.setURL('https://www.youtube.com/channel/UCB-vCi140r38njzhiQ-ykug')
+				.setURL('https://github.com/Eggrice62/SayangBot')
 				.setDescription('MIDI 파일 (*.mid) 을 ms2mml로 변환하는 봇입니다.\n이 채팅방에 미디 파일을 올리면 SayangBot이 자동으로 인식하여 작동합니다.\n미디 파일 공개가 꺼려지시면 개인 메시지 (DM)에서도 작동합니다.\n다만 보내신 mid 파일은 처리를 위해 제 컴퓨터에 저장됩니다. 도용을 하지는 않겠지만 그래도 참고해 주십시오.\n'+prefix+'도움말 <명령어> 로 세부 내용을 확인하세요!\nex) ' + prefix + '도움말 악보')
 				.addFields(
 					{ name: prefix+'정보', value: '미디 파일의 전반적인 정보'},//, inline: true },
@@ -264,7 +264,7 @@ const handleMessage = (message, client) => {
 				const exampleEmbed = new MessageEmbed()
 					.setColor('#8cffa9')
 					.setTitle('SayangBot 명령어 (' + prefix + args[0] + ')')
-					.setURL('https://www.youtube.com/channel/UCB-vCi140r38njzhiQ-ykug')
+					.setURL('https://github.com/Eggrice62/SayangBot')
 					.setDescription('미디 파일의 전반적인 정보를 확인할 수 있습니다.')
 					.addFields(
 						{ name: '파일 이름', value: '현재 사용 중인 mid 파일입니다. 해당 파일은 새로운 파일이 업로드되거나, SayangBot이 재부팅될 때까지 유효합니다. DM에서 사용 중인 파일은 다른 사람의 DM이나 서버에서 사용하는 파일의 영향을 받지 않습니다. 순서 걱정 없이 천천히 작업해 보세요.'},//, inline: true },
@@ -280,7 +280,7 @@ const handleMessage = (message, client) => {
 				const exampleEmbed = new MessageEmbed()
 					.setColor('#8cffa9')
 					.setTitle('SayangBot 명령어 (' + prefix + args[0] + ')')
-					.setURL('https://www.youtube.com/channel/UCB-vCi140r38njzhiQ-ykug')
+					.setURL('https://github.com/Eggrice62/SayangBot')
 					.setDescription('미디 파일에 들어있는 모든 음표를 악기 구분 없이 출력합니다. 독주용 악보를 만들거나, 글자수 문제로 2~3인 합주로 나눠서 만들 때 사용 가능합니다.\n악보 명령어에서 사용 가능한 옵션은 다음과 같습니다.\nex) ' + prefix + '악보 <옵션1> <옵션2> ... <옵션n>')
 					.addFields(
 						{ name: '셋잇단', value: '셋잇단음표가 많은 곡 (특히 스윙) 에 맞게 템포를 바꾸어 처리합니다.\nex) ' + prefix + '악보 셋잇단'},
@@ -313,7 +313,7 @@ const handleMessage = (message, client) => {
 				const exampleEmbed = new MessageEmbed()
 					.setColor('#8cffa9')
 					.setTitle('SayangBot 명령어 (' + prefix + args[0] + ')')
-					.setURL('https://www.youtube.com/channel/UCB-vCi140r38njzhiQ-ykug')
+					.setURL('https://github.com/Eggrice62/SayangBot')
 					.setDescription('미디 파일로부터 합주 악보를 자동 생성합니다.\n합주악보 명령어에서 사용 가능한 옵션은 다음과 같습니다.\nex) ' + prefix + '악보 <옵션1> <옵션2> ... <옵션n>')
 					.addFields(
 						{ name: '셋잇단', value: '셋잇단음표가 많은 곡 (특히 스윙) 에 맞게 템포를 바꾸어 처리합니다.\nex) ' + prefix + '합주악보 셋잇단'},
@@ -338,7 +338,7 @@ const handleMessage = (message, client) => {
 				const exampleEmbed = new MessageEmbed()
 					.setColor('#8cffa9')
 					.setTitle('SayangBot 명령어 (' + prefix + args[0] + ')')
-					.setURL('https://www.youtube.com/channel/UCB-vCi140r38njzhiQ-ykug')
+					.setURL('https://github.com/Eggrice62/SayangBot')
 					.setDescription('출력된 악보에 문제가 있을 때 시도해볼 수 있는 해결책입니다.')
 					.addFields(
 						{ name: '글자 수 줄이기', value: '' + prefix + '악보 해상도 5 등으로 해상도를 낮추어 보세요. 해상도 옵션을 입력하지 않은 경우 기본값 6으로 적용되고 있으며, 낮게 입력할수록 글자수가 줄어들고 악보의 품질이 낮아집니다.\n' + prefix + '악보 템포뭉개기 2 등으로 템포뭉개기 기능을 사용해 보세요. 템포뭉개기 옵션을 입력하지 않은 경우 기본값 0으로 적용되고 있으며, 높게 입력할수록 글자수가 줄어들고 변속의 개수가 적어집니다.'},
@@ -352,7 +352,7 @@ const handleMessage = (message, client) => {
 				const exampleEmbed = new MessageEmbed()
 					.setColor('#8cffa9')
 					.setTitle('SayangBot 명령어 (' + prefix + args[0] + ')')
-					.setURL('https://www.youtube.com/channel/UCB-vCi140r38njzhiQ-ykug')
+					.setURL('https://github.com/Eggrice62/SayangBot')
 					.setDescription('' + prefix + '피드백 으로 시작하는 메시지는 모두 개발자에게 자동으로 전달됩니다. 자유롭게 적어서 보내주시면 개발에 큰 도움이 됩니다. 감사합니다.');
 					message.channel.send(exampleEmbed);
 			} else {
@@ -365,7 +365,7 @@ const handleMessage = (message, client) => {
 		const exampleEmbed = new MessageEmbed()
 			.setColor('#8cffa9')
 			.setTitle('팁')
-			.setURL('https://www.youtube.com/channel/UCB-vCi140r38njzhiQ-ykug')
+			.setURL('https://github.com/Eggrice62/SayangBot')
 			.setDescription('출력된 악보에 문제가 있을 때 시도해볼 수 있는 해결책입니다.')
 			.addFields(
 				{ name: '글자 수 줄이기', value: '' + prefix + '악보 해상도 5 등으로 해상도를 낮추어 보세요. 해상도 옵션을 입력하지 않은 경우 기본값 6으로 적용되고 있으며, 낮게 입력할수록 글자수가 줄어들고 악보의 품질이 낮아집니다.\n' + prefix + '악보 템포뭉개기 2 등으로 템포뭉개기 기능을 사용해 보세요. 템포뭉개기 옵션을 입력하지 않은 경우 기본값 0으로 적용되고 있으며, 높게 입력할수록 글자수가 줄어들고 변속의 개수가 적어집니다.'},
@@ -383,7 +383,7 @@ const handleMessage = (message, client) => {
 			const exampleEmbed = new MessageEmbed()
 				.setColor('#8cffa9')
 				.setTitle('SayangBot')
-				.setURL('https://www.youtube.com/channel/UCB-vCi140r38njzhiQ-ykug')
+				.setURL('https://github.com/Eggrice62/SayangBot')
 				.setDescription('한국어 도움말은 ' + prefix + '도움말 을 참고하십시오.\nThis bot converts MIDI files (*.mid) to ms2mml.\nIf you upload a MIDI file to this chat room, SayangBot will automatically recognize it and operate it.\nIf you are reluctant to publish the MIDI file, it will also work in private message (DM).\nBut, the mid file you send is saved on my computer for processing.\nCheck details with'+prefix+'help <command>\nex) ' + prefix + 'help solo')
 				.addFields(
 					{ name: prefix+'info', value: 'General information about MIDI files'},//, inline: true },
@@ -397,7 +397,7 @@ const handleMessage = (message, client) => {
 				const exampleEmbed = new MessageEmbed()
 					.setColor('#8cffa9')
 					.setTitle('SayangBot command (' + prefix + args[0] + ')')
-					.setURL('https://www.youtube.com/channel/UCB-vCi140r38njzhiQ-ykug')
+					.setURL('https://github.com/Eggrice62/SayangBot')
 					.setDescription('You can check the overall information of the MIDI file.')
 					.addFields(
 						{ name: '파일 이름', value: 'This is the mid file currently in use. The file will remain in effect until a new file is uploaded or SayangBot reboots. Files in use in a DM are not affected by other people"s DMs or files used by the server.'},//, inline: true },
@@ -413,7 +413,7 @@ const handleMessage = (message, client) => {
 				const exampleEmbed = new MessageEmbed()
 					.setColor('#8cffa9')
 					.setTitle('SayangBot command (' + prefix + args[0] + ')')
-					.setURL('https://www.youtube.com/channel/UCB-vCi140r38njzhiQ-ykug')
+					.setURL('https://github.com/Eggrice62/SayangBot')
 					.setDescription('All notes in a MIDI file are output regardless of instrument. It can be used to make sheet music for solo use, or to divide it into two or three-person ensembles due to the number of characters.\nThe options available in the solo command are below.\nex) ' + prefix + 'solo <Option 1> <Option 2> ... <Option n>')
 					.addFields(
 						{ name: 'triplet', value: 'For songs with many triplets (especially swing), change the tempo to handle it.\nex) ' + prefix + 'solo triplet'},
@@ -446,7 +446,7 @@ const handleMessage = (message, client) => {
 				const exampleEmbed = new MessageEmbed()
 					.setColor('#8cffa9')
 					.setTitle('SayangBot command (' + prefix + args[0] + ')')
-					.setURL('https://www.youtube.com/channel/UCB-vCi140r38njzhiQ-ykug')
+					.setURL('https://github.com/Eggrice62/SayangBot')
 					.setDescription('Automatically create ensemble scores from MIDI files.\nThe options available in the ensemble command are below.\nex) ' + prefix + 'ensemble <Option 1> <Option 2> ... <Option n>')
 					.addFields(
 						{ name: 'triplet', value: 'For songs with many triplets (especially swing), change the tempo to handle it.\nex) ' + prefix + 'ensemble triplet'},
@@ -471,7 +471,7 @@ const handleMessage = (message, client) => {
 				const exampleEmbed = new MessageEmbed()
 					.setColor('#8cffa9')
 					.setTitle('Tip')
-					.setURL('https://www.youtube.com/channel/UCB-vCi140r38njzhiQ-ykug')
+					.setURL('https://github.com/Eggrice62/SayangBot')
 					.setDescription('This is general solution you can try when there is a problem with the printed sheet music.')
 					.addFields(
 						{ name: 'Reducing the number of characters', value: '' + prefix + 'ensemble resolution 5 Try lowering the resolution, etc. If no resolution option is entered, the default value of 6 is applied. The lower the input, the fewer characters and the lower the quality of the score.\n' + prefix + 'ensemble mergetempo 2 Try using the mergetempo option, etc. If the mergetempo option is not entered, the default value of 0 is applied, and the higher the input, the fewer characters.'},
@@ -485,7 +485,7 @@ const handleMessage = (message, client) => {
 				const exampleEmbed = new MessageEmbed()
 					.setColor('#8cffa9')
 					.setTitle('SayangBot command (' + prefix + args[0] + ')')
-					.setURL('https://www.youtube.com/channel/UCB-vCi140r38njzhiQ-ykug')
+					.setURL('https://github.com/Eggrice62/SayangBot')
 					.setDescription('Any messages that start with ' + prefix + 'feedback are automatically forwarded to the developer. Feel write it down and send it. it will be a great help for development. Thank you.');
 					message.channel.send(exampleEmbed);
 			} else {
@@ -498,7 +498,7 @@ const handleMessage = (message, client) => {
 		const exampleEmbed = new MessageEmbed()
 			.setColor('#8cffa9')
 			.setTitle('Tip')
-			.setURL('https://www.youtube.com/channel/UCB-vCi140r38njzhiQ-ykug')
+			.setURL('https://github.com/Eggrice62/SayangBot')
 			.setDescription('This is general solution you can try when there is a problem with the printed sheet music.')
 			.addFields(
 				{ name: 'Reducing the number of characters', value: '' + prefix + 'ensemble resolution 5 Try lowering the resolution, etc. If no resolution option is entered, the default value of 6 is applied. The lower the input, the fewer characters and the lower the quality of the score.\n' + prefix + 'ensemble mergetempo 2 Try using the mergetempo option, etc. If the mergetempo option is not entered, the default value of 0 is applied, and the higher the input, the fewer characters.'},
@@ -3231,7 +3231,7 @@ const handleMessage = (message, client) => {
 	
 					const exampleEmbed = new MessageEmbed()
 						.setColor('#8cffa9')
-						.setURL('https://www.youtube.com/channel/UCB-vCi140r38njzhiQ-ykug')
+						.setURL('https://github.com/Eggrice62/SayangBot')
 						.setFooter('문의 : 눈꽃빙빙빙 (계란밥#9331)', 'https://i.imgur.com/82dLPkv.png');
 					if (!isMML) {
 						exampleEmbed.setTitle('mid->ms2mml 변환 완료')
@@ -3239,11 +3239,11 @@ const handleMessage = (message, client) => {
 						exampleEmbed.setTitle('mid->mml 변환 완료')
 					}
 					if (writtenFileList.length == 1) {
-						exampleEmbed.setDescription('독주 악보');
+						exampleEmbed.addField('독주 악보', '______', false);
 					} else if (writtenFileList.length > 1 && (lOnoffVerticalDivision || command=='합주악보')) {
-						exampleEmbed.setDescription(writtenFileList.length + '인 합주 악보');
+						exampleEmbed.addField(writtenFileList.length + '인 합주 악보', '______', false);
 					} else {
-						exampleEmbed.setDescription('독주 악보 (' + writtenFileList.length + '장 연속 재생)');
+						exampleEmbed.addField('독주 악보 - ' + writtenFileList.length + '장 연속 재생', '만약 연속 독주 대신 합주를 원하신다면\n - ' + prefix + '합주악보\n - ' + prefix + '악보 화음분할\n등과 같이 사용해 보세요.', false);
 					}
 					for (iWritten=0; iWritten<writtenFileList.length; iWritten++) {
 						tempMessage = '```ini' + `
@@ -3387,7 +3387,7 @@ BPM`;
 							tempMessage += '```';
 							const exampleEmbed = new MessageEmbed()
 								.setColor('#8cffa9')
-								.setURL('https://www.youtube.com/channel/UCB-vCi140r38njzhiQ-ykug')
+								.setURL('https://github.com/Eggrice62/SayangBot')
 								.setDescription(tempMessage);
 							if (isFirstMessage) { exampleEmbed.setTitle('사용 중인 미디 파일 정보'); }
 							isFirstMessage = false;
@@ -3420,7 +3420,7 @@ BPM`;
 									tempMessage += '```';
 									const exampleEmbed = new MessageEmbed()
 										.setColor('#8cffa9')
-										.setURL('https://www.youtube.com/channel/UCB-vCi140r38njzhiQ-ykug')
+										.setURL('https://github.com/Eggrice62/SayangBot')
 										.setDescription(tempMessage);
 									if (isFirstMessage) { exampleEmbed.setTitle('사용 중인 미디 파일 정보'); }
 									isFirstMessage = false;
@@ -3434,7 +3434,7 @@ BPM`;
 								tempMessage += '```';
 								const exampleEmbed = new MessageEmbed()
 									.setColor('#8cffa9')
-									.setURL('https://www.youtube.com/channel/UCB-vCi140r38njzhiQ-ykug')
+									.setURL('https://github.com/Eggrice62/SayangBot')
 									.setDescription(tempMessage);
 								if (isFirstMessage) { exampleEmbed.setTitle('사용 중인 미디 파일 정보'); }
 								isFirstMessage = false;
@@ -3457,7 +3457,7 @@ BPM`;
 					tempMessage += '```';
 					const exampleEmbed = new MessageEmbed()
 						.setColor('#8cffa9')
-						.setURL('https://www.youtube.com/channel/UCB-vCi140r38njzhiQ-ykug')
+						.setURL('https://github.com/Eggrice62/SayangBot')
 						.setDescription(tempMessage)
 						.setFooter('문의 : 눈꽃빙빙빙 (계란밥#9331)', 'https://i.imgur.com/82dLPkv.png');
 					if (isFirstMessage) { exampleEmbed.setTitle('사용 중인 미디 파일 정보'); }
@@ -3858,7 +3858,7 @@ function sendError(a, b) {
 		.setColor('#ff0000')
 		.setTitle('에러')
 		.setDescription('```css\n['+b+']```')
-		.setURL('https://www.youtube.com/channel/UCB-vCi140r38njzhiQ-ykug')
+		.setURL('https://github.com/Eggrice62/SayangBot')
 		.setFooter('문의 : 눈꽃빙빙빙 (계란밥#9331)', 'https://i.imgur.com/82dLPkv.png');
 	a.send(exampleEmbed);
     return;
@@ -3869,7 +3869,7 @@ function sendWarning(a, b) {
 		.setColor('#ffa500')
 		.setTitle('경고')
 		.setDescription('```fix\n['+b+']```')
-		.setURL('https://www.youtube.com/channel/UCB-vCi140r38njzhiQ-ykug')
+		.setURL('https://github.com/Eggrice62/SayangBot')
 		.setFooter('문의 : 눈꽃빙빙빙 (계란밥#9331)', 'https://i.imgur.com/82dLPkv.png');
 	a.send(exampleEmbed);
     return;
@@ -3880,7 +3880,7 @@ function sendInformation(a, b) {
 		.setColor('#8cffa9')
 		.setTitle('알림')
 		.setDescription('```ini\n['+b+']```')
-		.setURL('https://www.youtube.com/channel/UCB-vCi140r38njzhiQ-ykug')
+		.setURL('https://github.com/Eggrice62/SayangBot')
 		.setFooter('문의 : 눈꽃빙빙빙 (계란밥#9331)', 'https://i.imgur.com/82dLPkv.png');
 	a.send(exampleEmbed);
     return;
