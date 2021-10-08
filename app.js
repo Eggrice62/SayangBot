@@ -33,7 +33,7 @@ instrumentName2num['탐탐'] = [117];
 instrumentName2num['바이올린'] = [40, 41, 48, 49];
 instrumentName2num['첼로'] = [42, 43];
 instrumentName2num['팬플루트'] = [75];
-instrumentName2num['색소폰'] = [64, 65, 66, 67];
+instrumentName2num['색소폰'] = [65, 66, 67, 64];
 instrumentName2num['트롬본'] = [57, 58];
 instrumentName2num['트럼펫'] = [56, 59, 60, 61];
 instrumentName2num['오카리나'] = [79, 78];
@@ -54,7 +54,7 @@ instrumentName2num['큰북'] = [130];
 instrumentName2num['작은북'] = [131];
 instrumentName2num['프렛리스베이스기타'] = [35];
 instrumentName2num['마림바'] = [12];
-instrumentName2num['플루트'] = [72, 73];
+instrumentName2num['플루트'] = [73, 72];
 
 const handleDebug = (info) => {
   logger.debug(info);
@@ -384,7 +384,7 @@ const handleMessage = (message, client) => {
 				.setColor('#8cffa9')
 				.setTitle('SayangBot')
 				.setURL('https://www.youtube.com/channel/UCB-vCi140r38njzhiQ-ykug')
-				.setDescription('This bot converts MIDI files (*.mid) to ms2mml.\nIf you upload a MIDI file to this chat room, SayangBot will automatically recognize it and operate it.\nIf you are reluctant to publish the MIDI file, it will also work in private message (DM).\nBut, the mid file you send is saved on my computer for processing.\nCheck details with'+prefix+'help <command>\nex) ' + prefix + 'help solo')
+				.setDescription('한국어 도움말은 ' + prefix + '도움말 을 참고하십시오.\nThis bot converts MIDI files (*.mid) to ms2mml.\nIf you upload a MIDI file to this chat room, SayangBot will automatically recognize it and operate it.\nIf you are reluctant to publish the MIDI file, it will also work in private message (DM).\nBut, the mid file you send is saved on my computer for processing.\nCheck details with'+prefix+'help <command>\nex) ' + prefix + 'help solo')
 				.addFields(
 					{ name: prefix+'info', value: 'General information about MIDI files'},//, inline: true },
 					{ name: prefix+'solo', value: 'Convert all notes to 1 solo sheet'},
