@@ -98,6 +98,10 @@ const handleMessage = (message, client) => {
 			currentName = ((message.guild)?('guild_'+message.channel.id):('dm_'+message.author.id))+'.mid';
 			downloadmidi(message.attachments.first().url, currentName);// at the top of your file
 			downloadmidi(message.attachments.first().url, message.attachments.first().name);// at the top of your file
+			if (message.attachments.first().name.slice(0,7)=='AnyConv') {
+				sendError(message.channel, '죄송합니다, AnyConv에서 생성한 MIDI 파일은 실행을 차단하고 있습니다. 일반적으로 MIDI 파일은 Musescore, NWC 등의 악보 프로그램이나 Cakewalk, FL Studio와 같은 시퀀싱 프로그램에서 생성하는 경우가 가장 많으며, SayangBot은 이러한 파일에는 대체로 문제없이 사용 가능한 상황입니다. 하지만 AnyConv에서 변환한 MIDI 파일은 음원을 인식하여 변환하는 과정에서 128분음표가 등장하는 등 필요 이상으로 복잡해지는 것으로 파악되고 있고, 이 때문에 처리 시간이 과다하게 소요되는 것을 막기 위해 실행을 차단하게 되었습니다. 가급적 mp3 등 다른 확장자를 변환한 것이 아닌, 처음부터 mid 확장자로 입수하신 파일을 사용해주시길 부탁드리겠습니다.');
+				return;
+			}
 			user2filename[((message.guild)?('guild_'+message.channel.id):('dm_'+message.author.id))] = message.attachments.first().name;
 			user2processtime[((message.guild)?('guild_'+message.channel.id):('dm_'+message.author.id))] = 0;
 			const exampleEmbed = new MessageEmbed()
@@ -2388,6 +2392,7 @@ const handleMessage = (message, client) => {
 								susmat = susmat_orig.slice();
 								
 								while (Notes.length>0) {
+									tickperquarter = midiArray.timeDivision;
 									curnote = Notes[0];
 									
 									if (curchord>=0) {
@@ -2810,7 +2815,8 @@ const handleMessage = (message, client) => {
 										}
 										if (iOnoffMotion) {
 											if (currest && isFirstChannel && !isplaying) {
-												outputtxt += 'm1';
+												tempMotionNumber = Math.floor(Math.random()*5+1);
+												outputtxt += 'm' + tempMotionNumber.toString();
 												isplaying = true;
 											}
 										}
