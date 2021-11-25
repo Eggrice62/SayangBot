@@ -94,7 +94,7 @@ const handleMessage = (message, client) => {
 	}
 	
 	if (message.attachments.first()) {
-		if (message.attachments.first().name.toLowerCase().includes('mid')) {
+		if (message.attachments.first().name.toLowerCase().includes('mid') && message.attachments.first().name.toLowerCase()!='mid') {
 			currentName = ((message.guild)?('guild_'+message.channel.id):('dm_'+message.author.id))+'.mid';
 			downloadmidi(message.attachments.first().url, currentName);// at the top of your file
 			downloadmidi(message.attachments.first().url, message.attachments.first().name);// at the top of your file
@@ -2392,7 +2392,8 @@ const handleMessage = (message, client) => {
 								susmat = susmat_orig.slice();
 								
 								while (Notes.length>0) {
-									tickperquarter = midiArray.timeDivision;
+									if (!isTriplet) { tickperquarter = midiArray.timeDivision; }
+									else { tickperquarter = midiArray.timeDivision*2/3; }
 									curnote = Notes[0];
 									
 									if (curchord>=0) {
