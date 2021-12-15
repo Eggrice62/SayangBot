@@ -2392,8 +2392,6 @@ const handleMessage = (message, client) => {
 								susmat = susmat_orig.slice();
 								
 								while (Notes.length>0) {
-									if (!isTriplet) { tickperquarter = midiArray.timeDivision; }
-									else { tickperquarter = midiArray.timeDivision*2/3; }
 									curnote = Notes[0];
 									
 									if (curchord>=0) {
@@ -2859,6 +2857,8 @@ const handleMessage = (message, client) => {
 									Notes = Notes2;
 									Notes2 = [];
 									currentTime = tempTimeStartNote;
+									if (!isTriplet) { tickperquarter = midiArray.timeDivision; }
+									else { tickperquarter = midiArray.timeDivision*2/3; }
 									curoct = 4;
 									curlen = 4;
 									curvol = 8;
