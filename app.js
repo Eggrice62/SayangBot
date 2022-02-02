@@ -2050,7 +2050,10 @@ const handleMessage = (message, client) => {
 							}
 							icuttable[2] = tempCutIndex;
 							iCurrentWriteHorizontal = 0;
-							Notes_orig = Notes;
+							Notes_orig = [];
+							for (inote=0; inote<Notes.length; inote++) {
+								Notes_orig[inote] = Notes[inote].slice();
+							}
 							tempomat_orig_orig = tempomat;
 							sustainTrackChannel_orig = sustainTrackChannel;
 						}
@@ -2064,7 +2067,10 @@ const handleMessage = (message, client) => {
 								tempTimeStartNote = timeStartNote;
 								tempTimeEndNote = timeEndNote;
 							} else {
-								Notes = Notes_orig;
+								Notes = [];
+								for (inote=0; inote<Notes_orig.length; inote++) {
+									Notes[inote] = Notes_orig[inote].slice();
+								}
 								tempomat = tempomat_orig_orig;
 								sustainTrackChannel = sustainTrackChannel_orig;
 								if (icuttable[1] < 0 && icuttable[2] == cuttableMat.length-1) {
@@ -2233,7 +2239,7 @@ const handleMessage = (message, client) => {
 							for (inote=0; inote<Notes.length; inote++) {
 								if (!listTrackChannel[Notes[inote][0]][Notes[inote][1]]) { continue; }
 								if (Notes[inote][2] < pitchLowerBound) { continue; }
-								if (Notes[inote][3] > pitchUpperBound) { continue; }
+								if (Notes[inote][2] > pitchUpperBound) { continue; }
 								if (Notes[inote][4] < tempTimeStartNote) { continue; }
 								if (Notes[inote][5] > tempTimeEndNote) { continue; }
 								if (Notes[inote][4] < timeStartNote) { continue; }
