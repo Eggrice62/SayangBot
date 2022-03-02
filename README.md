@@ -9,33 +9,6 @@ This bot instantly converts MIDI files into MapleStory 2 sheet music.
 Become a new musician in Maple World!  
 ![](./image/sendmidi.png)
 
-# 설치 / Setup
-
-## Discord 계정 준비 / Prepare your Discord account
-
-https://discord.com/  
-이 프로그램은 Discord에서 작동합니다. 편리한 게임 메신저인 Discord에 지금 바로 로그인하세요!  
-This program works with Discord. Log in to Discord, a convenient game messenger right now!
-
-## Discord 서버 준비 / Prepare your Discord server
-
-SayangBot을 초대할 서버가 있어야 합니다. 없으시더라도 Discord에서 10초면 만들 수 있습니다.  
-You must have a server to invite SayangBot to. Even if you don't have one, you can create one on Discord in 10 seconds.  
-![](./image/addserver.png)
-
-## SayangBot 초대하기 / Invite SayangBot
-
-https://discord.com/oauth2/authorize?client_id=886956440361791499&permissions=0&scope=bot  
-↑ 이 링크를 누르시면 SayangBot을 서버에 초대할 수 있습니다.  
-↑ Click this link to invite SayangBot to the server.
-
-## 설치 완료! / Installation is complete
-
-![](./image/online.png)  
-이제부터 SayangBot이 음악가님을 위해 악보를 만들어 줄 것입니다.  
-From now on, SayangBot will create sheet music for you.
-
-
 # 사용법 / How to use
 
 ## 미디 파일 준비 / Prepare MIDI file
