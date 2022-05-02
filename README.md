@@ -11,6 +11,10 @@ Become a new musician in Maple World!
 
 # 사용법 / How to use
 
+## 사양봇 서버 참여 or 직접 서버 초대
+- (권장) Discord에서 사양봇 서식지 ( https://discord.gg/zDKPbSJcPA ) 서버에 참여하신 뒤, 서버에 있는 SayangBot에게 개인 메시지 (DM) 를 보내서 사용하실 수 있습니다.
+- (권장하지 않음) 위 서버 참여가 어려우신 경우, 사양봇 소환 링크 ( https://bit.ly/3hYvjKm ) 를 통해 자신의 서버에 사양봇을 소환할 수 있습니다. 그러나 소환한 봇을 방치할 경우 봇이 탈주할 수 있습니다.
+
 ## 미디 파일 준비 / Prepare MIDI file
 
 만들고자 하는 음악의 MIDI 파일이 있어야 합니다.  
