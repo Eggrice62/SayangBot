@@ -7,3 +7,4 @@ callgrind.out*
 current.midi_now
 sayang.callgrind
 sayangbot_module
+secretToken*

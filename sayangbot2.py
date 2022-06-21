@@ -488,4 +488,7 @@ instrumentName2num['마림바'] = [12]
 instrumentName2num['플루트'] = [73, 72]
 
 prefix = '.%'
-client.run('ODkxMDkyNTk1Mzk5MzI3Nzk2.YU5Upg.w0tnkyXkib8zbFWI_8z0Cq1I84U')
+with open('secretToken') as f:
+	lines = f.readlines()
+	secretToken = lines[0].strip()
+client.run(secretToken)
