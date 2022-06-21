@@ -1,0 +1,9 @@
+*.ms2mml
+*.mid
+*.mml
+*.zip
+*.sayang
+callgrind.out*
+current.midi_now
+sayang.callgrind
+sayangbot_module
