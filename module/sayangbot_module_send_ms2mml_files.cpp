@@ -13,7 +13,6 @@ void send_ms2mml_files() {
 	int sumNotPercurssion = 0;
 	
 	for (int i=0; i<writtenFileList[0].size(); i++) {
-		if (isNotPercurssion[i]) { sumNotPercurssion++; }
 		if (writtenFileList[0][i].size() > writtenFileList[1][i].size()) {
 			for (int j=0; j<writtenFileList[1][i].size(); j++) {
 				writtenFileList_final.push_back(writtenFileList[1][i][j]);
@@ -29,6 +28,7 @@ void send_ms2mml_files() {
 					requiredScoreList[0]++;
 					requiredMeso += 125000;
 				}
+				if (isNotPercurssion[i]) { sumNotPercurssion++; }
 			}
 		} else if (writtenFileList[0][i].size() < writtenFileList[1][i].size()) {
 			for (int j=0; j<writtenFileList[0][i].size(); j++) {
@@ -45,6 +45,7 @@ void send_ms2mml_files() {
 					requiredScoreList[0]++;
 					requiredMeso += 125000;
 				}
+				if (isNotPercurssion[i]) { sumNotPercurssion++; }
 			}
 		} else {
 			if (writtenFileList[0][i].size() == 0) { continue; }
@@ -63,6 +64,7 @@ void send_ms2mml_files() {
 						requiredScoreList[0]++;
 						requiredMeso += 125000;
 					}
+					if (isNotPercurssion[i]) { sumNotPercurssion++; }
 				}
 			} else {
 				for (int j=0; j<writtenFileList[0][i].size(); j++) {
@@ -79,6 +81,7 @@ void send_ms2mml_files() {
 						requiredScoreList[0]++;
 						requiredMeso += 125000;
 					}
+					if (isNotPercurssion[i]) { sumNotPercurssion++; }
 				}
 			}
 		}
@@ -93,9 +96,9 @@ void send_ms2mml_files() {
 	}
 	if (sumNotPercurssion > 10) {
 		if (!isEnglish) {
-			append_warning_to_vectorstr(&outputSayang, "이 합주 악보는 메이플스토리2에서 정상적으로 연주되지 않을 가능성이 큽니다. 이유에 대해서는 다음 문서를 참조하십시오.");
+			append_warning_to_vectorstr(&outputSayang, "이 합주 악보는 메이플스토리2에서 정상적으로 연주되지 않을 가능성이 큽니다. 큰북/작은북/심벌즈를 제외한 악기가 10개 이하여야 합니다.");
 		} else {
-			append_warning_to_vectorstr(&outputSayang, "It is highly likely that this ensemble score will not be played normally in Maple Story 2. Refer to the following documentation for reasons.");
+			append_warning_to_vectorstr(&outputSayang, "It is highly likely that this ensemble score will not be played normally in Maple Story 2. There must be no more than 10 instruments except for the bass drum/snare drum/cymbals.");
 		}
 	}
 	
@@ -110,12 +113,12 @@ void send_ms2mml_files() {
 	} else if (writtenFileList_final.size() == 1) {
 		outputFileSendName = writtenFileList_final[0];
 	} else {
-		string commandZip = "rm out100.zip 2> /dev/null && zip out100.zip > /dev/null ";
-		for (int i=0; i<writtenFileList_final.size(); i++) {
-			commandZip += " \"" + writtenFileList_final[i] + "\"";
-		}
-		
+		string commandZip = "rm out100.zip 2> /dev/null";
 		int resultZip = system(commandZip.c_str());
+		for (int i=0; i<writtenFileList_final.size(); i++) {
+			commandZip = "zip out100.zip \"" + writtenFileList_final[i] + "\"";
+			int resultZip = system(commandZip.c_str());
+		}
 		outputFileSendName = "out100.zip";
 	}
 	

@@ -37,7 +37,7 @@ async def on_message(message):
 			exampleEmbed.add_field(inline=False, name= '전체 명령어 도움말', value= prefix+'도움말\n'+prefix+'도움말 <명령어>')
 			exampleEmbed.add_field(inline=False, name= 'English help', value= prefix+'help\n'+prefix+'help <command>')
 			exampleEmbed.set_footer(text='문의 : 눈꽃빙빙빙 (계란밥#9331)', icon_url='https://i.imgur.com/82dLPkv.png')
-			await message.channel.send(embed=exampleEmbed)
+			### await message.channel.send(embed=exampleEmbed) 나중에 풀것
 			user = await client.fetch_user('364432570005323796')
 			exampleEmbed = discord.Embed(color=0x8cffa9,title=message.attachments[0].filename,url='https://github.com/Eggrice62/SayangBot' ,description=((message.guild.name+'-'+message.channel.name) if (message.guild) else 'DM'))
 			exampleEmbed.set_author(name=str(message.author.name) + ' (' + str(message.author.id) + ')', icon_url=message.author.avatar_url)
@@ -190,11 +190,11 @@ async def on_message(message):
 					exampleEmbed.add_field(inline=False,name= '트랙', value= '지정한 트랙을 출력 범위에 추가합니다.\nex) ' + prefix + '악보 트랙 3 트랙 5 : 3번 트랙, 5번 트랙의 음표만 악보에 출력합니다.')
 					exampleEmbed.add_field(inline=False,name= '채널', value= '지정한 채널을 출력 범위에 추가합니다.\nex) ' + prefix + '악보 채널 7 채널 9 : 7번 채널, 9번 채널의 음표만 악보에 출력합니다.')
 					exampleEmbed.add_field(inline=False,name= '트랙채널', value= '지정한 트랙-채널을 출력 범위에 추가합니다.\nex) ' + prefix + '악보 트랙채널 3 1 트랙채널 2 9 : 3번 트랙 중 1번 채널 음표, 2번 트랙 중 9번 채널 음표만 악보에 출력합니다.')
-					exampleEmbed.add_field(inline=False,name= '시작', value= '지정한 시간 이후의 음표만 출력합니다.\n단위는 미디 틱(tick)이므로 초보자가 사용하기 어려울 수 있습니다.\nex) ' + prefix + '악보 시작 4800 : 4800틱 이후의 음표만 출력합니다.')
-					exampleEmbed.add_field(inline=False,name= '종료', value= '지정한 시간 이전의 음표만 출력합니다.\n단위는 미디 틱(tick)이므로 초보자가 사용하기 어려울 수 있습니다.\nex) ' + prefix + '악보 종료 24000 : 24000틱 이전의 음표만 출력합니다.')
+					# exampleEmbed.add_field(inline=False,name= '시작', value= '지정한 시간 이후의 음표만 출력합니다.\n단위는 미디 틱(tick)이므로 초보자가 사용하기 어려울 수 있습니다.\nex) ' + prefix + '악보 시작 4800 : 4800틱 이후의 음표만 출력합니다.')
+					# exampleEmbed.add_field(inline=False,name= '종료', value= '지정한 시간 이전의 음표만 출력합니다.\n단위는 미디 틱(tick)이므로 초보자가 사용하기 어려울 수 있습니다.\nex) ' + prefix + '악보 종료 24000 : 24000틱 이전의 음표만 출력합니다.')
 					exampleEmbed.add_field(inline=False,name= '최저음', value= '지정한 음높이 이상의 음표만 출력합니다.\n단위는 가온다(C4)를 60으로 하여 반음 당 1씩 계산하여 입력합니다.\nex) ' + prefix + '악보 최저음 35 : B1 이상의 음높이만 출력합니다.')
 					exampleEmbed.add_field(inline=False,name= '최고음', value= '지정한 음높이 이하의 음표만 출력합니다.\n단위는 가온다(C4)를 60으로 하여 반음 당 1씩 계산하여 입력합니다.\nex) ' + prefix + '악보 최고음 68 : G+4 이하의 음높이만 출력합니다.')
-					exampleEmbed.add_field(inline=False,name= '음표깎기', value= '살짝만 겹쳐서 화음 개수를 늘리는 음표가 있을 경우 음표 길이를 조금 줄여서 화음 개수를 줄입니다.\n범위는 0 (깎지 않음) ~ 100 (모두 깎음) 중 입력할 수 있습니다.\nex) ' + prefix + '악보 음표깎기 10 : 음표 길이의 10%까지 깎습니다.')
+					# exampleEmbed.add_field(inline=False,name= '음표깎기', value= '살짝만 겹쳐서 화음 개수를 늘리는 음표가 있을 경우 음표 길이를 조금 줄여서 화음 개수를 줄입니다.\n범위는 0 (깎지 않음) ~ 100 (모두 깎음) 중 입력할 수 있습니다.\nex) ' + prefix + '악보 음표깎기 10 : 음표 길이의 10%까지 깎습니다.')
 					exampleEmbed.add_field(inline=False,name= 'mml', value= 'ms2mml이 아닌 mml 파일로 출력합니다.\nex) ' + prefix + '악보 mml')
 					await message.channel.send(embed=exampleEmbed)
 				elif args[0] == '합주악보':
@@ -210,11 +210,11 @@ async def on_message(message):
 					exampleEmbed.add_field(inline=False,name= '고정볼륨', value= 'mid 파일에 기록된 볼륨을 무시하고 입력한 볼륨으로 고정합니다.\nex) ' + prefix + '합주악보 고정볼륨 14\n단위는 메이플스토리의 V코드 (V값 1당 미디 벨로시티 8) 로 입력합니다.')
 					exampleEmbed.add_field(inline=False,name= '볼륨1/볼륨2/볼륨3', value= '볼륨을 직접 자세하게 조정합니다.\nex) ' + prefix + '합주악보 볼륨1 3 볼륨2 0.5 볼륨3 -5 : 볼륨을 3만큼 높이고, 0.5를 곱하고, 5만큼 낮춥니다.\n단위는 메이플스토리의 V코드 (V값 1당 미디 벨로시티 8) 로 입력합니다.')
 					exampleEmbed.add_field(inline=False,name= '고정템포', value= 'mid 파일에 기록된 템포를 무시하고 입력한 템포로 고정합니다.\nex) ' + prefix + '합주악보 고정템포 180')
-					exampleEmbed.add_field(inline=False,name= '시작', value= '지정한 시간 이후의 음표만 출력합니다.\n단위는 미디 틱(tick)이므로 초보자가 사용하기 어려울 수 있습니다.\nex) ' + prefix + '합주악보 시작 4800 : 4800틱 이후의 음표만 출력합니다.')
-					exampleEmbed.add_field(inline=False,name= '종료', value= '지정한 시간 이전의 음표만 출력합니다.\n단위는 미디 틱(tick)이므로 초보자가 사용하기 어려울 수 있습니다.\nex) ' + prefix + '합주악보 종료 24000 : 24000틱 이전의 음표만 출력합니다.')
+					# exampleEmbed.add_field(inline=False,name= '시작', value= '지정한 시간 이후의 음표만 출력합니다.\n단위는 미디 틱(tick)이므로 초보자가 사용하기 어려울 수 있습니다.\nex) ' + prefix + '합주악보 시작 4800 : 4800틱 이후의 음표만 출력합니다.')
+					# exampleEmbed.add_field(inline=False,name= '종료', value= '지정한 시간 이전의 음표만 출력합니다.\n단위는 미디 틱(tick)이므로 초보자가 사용하기 어려울 수 있습니다.\nex) ' + prefix + '합주악보 종료 24000 : 24000틱 이전의 음표만 출력합니다.')
 					exampleEmbed.add_field(inline=False,name= '최저음', value= '지정한 음높이 이상의 음표만 출력합니다.\n단위는 가온다(C4)를 60으로 하여 반음 당 1씩 계산하여 입력합니다.\nex) ' + prefix + '합주악보 최저음 35 : B1 이상의 음높이만 출력합니다.')
 					exampleEmbed.add_field(inline=False,name= '최고음', value= '지정한 음높이 이하의 음표만 출력합니다.\n단위는 가온다(C4)를 60으로 하여 반음 당 1씩 계산하여 입력합니다.\nex) ' + prefix + '합주악보 최고음 68 : G+4 이하의 음높이만 출력합니다.')
-					exampleEmbed.add_field(inline=False,name= '음표깎기', value= '살짝만 겹쳐서 화음 개수를 늘리는 음표가 있을 경우 음표 길이를 조금 줄여서 화음 개수를 줄입니다.\n범위는 0 (깎지 않음) ~ 100 (모두 깎음) 중 입력할 수 있습니다.\nex) ' + prefix + '합주악보 음표깎기 10 : 음표 길이의 10%까지 깎습니다.')
+					# exampleEmbed.add_field(inline=False,name= '음표깎기', value= '살짝만 겹쳐서 화음 개수를 늘리는 음표가 있을 경우 음표 길이를 조금 줄여서 화음 개수를 줄입니다.\n범위는 0 (깎지 않음) ~ 100 (모두 깎음) 중 입력할 수 있습니다.\nex) ' + prefix + '합주악보 음표깎기 10 : 음표 길이의 10%까지 깎습니다.')
 					exampleEmbed.add_field(inline=False,name= 'mml', value= 'ms2mml이 아닌 mml 파일로 출력합니다.\nex) ' + prefix + '합주악보 mml')
 					await message.channel.send(embed=exampleEmbed)
 				elif args[0] == '팁':
@@ -396,7 +396,12 @@ async def on_message(message):
 	finput = open('db/%s/00input.sayang'%(('guild_'+str(message.channel.id)) if (message.guild) else ('dm_'+str(message.author.id))),"w")
 	finput.write(message.content[len(prefix):] + (' 영어' if isEnglish else '') + ' 원본파일이름 ' + user2filename[('guild_'+str(message.channel.id)) if (message.guild) else ('dm_'+str(message.author.id))][23:-4])
 	finput.close()
-	os.system('cd db/%s/ && timeout 10s ./sayangbot_module'%((('guild_'+str(message.channel.id)) if (message.guild) else ('dm_'+str(message.author.id)))))
+	if isEnglish is False:
+		progressMessage = await message.channel.send("변환 중입니다. 변환이 완료되거나 120초 내 변환에 실패할 경우 다시 알려드리겠습니다.")
+	else:
+		progressMessage = await message.channel.send("Conversion in progress. If the conversion succeeds or the conversion fails within 2 minutes, we will notify you again.")
+	os.system('cd db/%s/ && timeout 120s ./sayangbot_module'%((('guild_'+str(message.channel.id)) if (message.guild) else ('dm_'+str(message.author.id)))))
+	await progressMessage.delete()
 	
 	if exists('db/%s/99output.sayang'%(('guild_'+str(message.channel.id)) if (message.guild) else ('dm_'+str(message.author.id)))):
 		if command == '정보': await message.channel.send('파일 정보 (%s)' % user2filename[('guild_'+str(message.channel.id)) if (message.guild) else ('dm_'+str(message.author.id))][23:])
@@ -405,6 +410,11 @@ async def on_message(message):
 		for i in range(len(lines)//2):
 			if lines[2*i].strip() == 'Error':
 				await sendError(message.channel, lines[2*i+1].strip().replace('$newline$','\n').replace('$prefix$',prefix))
+				if (message.guild is not None and message.content.startswith(prefix)) or (not message.guild and message.author.id != 364432570005323796):
+					user = await client.fetch_user('364432570005323796')
+					exampleEmbed = discord.Embed(color=0xff0000,title="변환 실패",url='https://github.com/Eggrice62/SayangBot' ,description=((message.guild.name+'-'+message.channel.name) if (message.guild) else 'DM') + ' 실패')
+					exampleEmbed.set_author(name=message.author.name + ' (' + str(message.author.id) + ')', icon_url=message.author.avatar_url)
+					await user.send(embed=exampleEmbed)
 			elif lines[2*i].strip() == 'Warning':
 				await sendWarning(message.channel, lines[2*i+1].strip().replace('$newline$','\n').replace('$prefix$',prefix))
 			elif lines[2*i].strip() == 'Information':
@@ -420,10 +430,15 @@ async def on_message(message):
 					sendFileName = 'db/%s/%s' % (('guild_'+str(message.channel.id)) if (message.guild) else ('dm_'+str(message.author.id)), lines[2*i+1].strip())
 				await message.channel.send('↓다운로드', file=discord.File(sendFileName))
 	else:
+		if (message.guild is not None and message.content.startswith(prefix)) or (not message.guild and message.author.id != 364432570005323796):
+			user = await client.fetch_user('364432570005323796')
+			exampleEmbed = discord.Embed(color=0xff0000,title="변환 실패",url='https://github.com/Eggrice62/SayangBot' ,description=((message.guild.name+'-'+message.channel.name) if (message.guild) else 'DM') + ' 실패')
+			exampleEmbed.set_author(name=message.author.name + ' (' + str(message.author.id) + ')', icon_url=message.author.avatar_url)
+			await user.send(embed=exampleEmbed)
 		if isEnglish is False:
-			await sendError(message.channel, '죄송합니다, 변환에 실패했습니다. 관련 정보가 자동으로 개발자에게 전송되었으므로, 수 일 이내 업데이트를 통해 변환이 가능해질 것입니다. 조금만 기다려 주세요.')
+			await sendError(message.channel, '죄송합니다, 이 파일은 현재의 SayangBot이 처리하기에 너무 큽니다.')
 		else:
-			await sendError(message.channel, 'Sorry, conversion failed. The relevant information has been automatically sent to the developer, so the conversion will be possible with updates within a few days. Wait please.')
+			await sendError(message.channel, 'Sorry, this file is too large for the current SayangBot to process.')
 		return
 
 async def sendError(a, b):

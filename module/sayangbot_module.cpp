@@ -39,9 +39,9 @@ int main(int argc, char *argv[]) {
 	auto t3 = chrono::steady_clock::now();
 	    cout << "3 Elapsed time in milliseconds: "
         << chrono::duration_cast<chrono::milliseconds>(t3 - t2).count()
-        << " ms" << endl;
+        << " ms" << endl; t1 = t3;
 		
-	if (command != "정보") {
+	if (command != "정보" && !errorNow) {
 		lOnOff_candidate = true;
 		
 		parse_midi();
@@ -57,7 +57,7 @@ int main(int argc, char *argv[]) {
 		
 		send_ms2mml_files();
 	}
-	// append_information_to_vectorstr(&outputSayang, "테스트 중입니다.");
+	append_information_to_vectorstr(&outputSayang, "SayangBot2 BETA 테스트 기간입니다. (~2022/7/31)$newline$버그가 있다면 편히 제보해주시면 큰 도움이 됩니다. 감사합니다.");
 	write_file_from_string_vector("99output.sayang", outputSayang);
 	return 0;
 	

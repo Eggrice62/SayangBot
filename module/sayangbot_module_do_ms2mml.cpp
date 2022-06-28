@@ -33,6 +33,18 @@ void do_ms2mml() {
 		}
 	}
 	
+	int noteResolution_orig = noteResolution;
+	while (tickperquarter % (noteResolution/4) != 0 && noteResolution > 4) {
+		noteResolution /= 2;
+	}
+	if (noteResolution_orig != noteResolution && !lOnOff_candidate) {
+		if (!isEnglish) {
+			append_warning_to_vectorstr(&outputSayang, "이 미디 파일에서는 " + to_string(noteResolution_orig) + "분음표의 정확한 표현이 불가능합니다. 출력 해상도를 " + to_string(noteResolution) + "분음표로 자동 하향합니다.");
+		} else {
+			append_warning_to_vectorstr(&outputSayang, "This midi file does not allow accurate representation of " + to_string(noteResolution_orig) +"th notes. Automatically lowers the output resolution to " + to_string(noteResolution) + "th note.");
+		}
+	}
+	
 	vector<vector<int>> Notes_before_command = Notes;
 	vector<vector<int>> tempomat_before_command = tempomat;
 	vector<vector<vector<vector<int>>>> sustainTrackChannel_before_command = sustainTrackChannel;
@@ -251,6 +263,7 @@ void do_ms2mml() {
 					} else {
 						append_error_to_vectorstr(&outputSayang, "Either the MIDI file contains no notes or SayangBot couldn't read it...");
 					}
+					errorNow = true;
 					return;
 				} else {
 					vector<string> instrumentKeyList = instrumentNameList;
@@ -261,6 +274,7 @@ void do_ms2mml() {
 							} else {
 								append_warning_to_vectorstr(&outputSayang, "The instrument (" + instrumentKeyList[iInstrInv] + ") doesn't seem to appear in this MIDI file. Check the instrument information with the $prefix$info command.");
 							}
+							errorNow = true;
 							return;
 						}
 					}
@@ -269,6 +283,7 @@ void do_ms2mml() {
 					} else {
 						append_warning_to_vectorstr(&outputSayang, "The instrument (" + instr2name(supportedInstrList[0]) + ") doesn't seem to appear in this MIDI file. Check the instrument information with the $prefix$info command.");
 					}
+					errorNow = true;
 					return;
 				}
 			} else if (command == "합주악보") {
@@ -325,29 +340,29 @@ void do_ms2mml() {
 			
 			if (!isTriplet) {
 				for (int iCutCut=0; iCutCut<cuttableMat.size(); iCutCut++) {
-					cuttableMat[iCutCut] = (int)(0.5+(cuttableMat[iCutCut]-tempTimeStartNote)/(4*tickperquarter/noteResolution)) * (4*tickperquarter/noteResolution) + tempTimeStartNote;
+					cuttableMat[iCutCut] = (int)(0.5+(cuttableMat[iCutCut]-tempTimeStartNote)/(4.*tickperquarter/noteResolution)) * (4.*tickperquarter/noteResolution) + tempTimeStartNote;
 				}
 			} else if (isTriplet) {
 				for (int iCutCut=0; iCutCut<cuttableMat.size(); iCutCut++) {
-					cuttableMat[iCutCut] = (int)(0.5+(cuttableMat[iCutCut]-tempTimeStartNote)/(4*tickperquarter*2/3/noteResolution)) * (4*tickperquarter*2/3/noteResolution) + tempTimeStartNote;
+					cuttableMat[iCutCut] = (int)(0.5+(cuttableMat[iCutCut]-tempTimeStartNote)/(4.*tickperquarter*2/3/noteResolution)) * (4.*tickperquarter*2/3/noteResolution) + tempTimeStartNote;
 				}
 			}
 			
 			if (!isTriplet) {
 				for (int itempo=0; itempo<tempomat.size(); itempo++) {
-					tempomat[itempo][0] = (tempoResolution*4*tickperquarter/noteResolution)*(int)(0.5+(tempomat[itempo][0]-tempTimeStartNote)/(tempoResolution*4.*tickperquarter/noteResolution)) + tempTimeStartNote;
+					tempomat[itempo][0] = (tempoResolution*4.*tickperquarter/noteResolution)*(int)(0.5+(tempomat[itempo][0]-tempTimeStartNote)/(tempoResolution*4.*tickperquarter/noteResolution)) + tempTimeStartNote;
 					if (itempo!=0) {
 						if (tempomat[itempo-1][1] > 255) {
-							tempomat[itempo][0] = (2*tempoResolution*4*tickperquarter/noteResolution)*(int)(0.5+(tempomat[itempo][0]-tempTimeStartNote)/(2.*tempoResolution*4*tickperquarter/noteResolution)) + tempTimeStartNote;
+							tempomat[itempo][0] = (2*tempoResolution*4.*tickperquarter/noteResolution)*(int)(0.5+(tempomat[itempo][0]-tempTimeStartNote)/(2.*tempoResolution*4*tickperquarter/noteResolution)) + tempTimeStartNote;
 						}
 					}
 				}
 			} else if (isTriplet) {
 				for (int itempo=0; itempo<tempomat.size(); itempo++) {
-					tempomat[itempo][0] = (tempoResolution*4*tickperquarter*2/3/noteResolution)*(int)(0.5+(tempomat[itempo][0]-tempTimeStartNote)/(tempoResolution*4.*tickperquarter*2/3/noteResolution)) + tempTimeStartNote;
+					tempomat[itempo][0] = (tempoResolution*4.*tickperquarter*2/3/noteResolution)*(int)(0.5+(tempomat[itempo][0]-tempTimeStartNote)/(tempoResolution*4.*tickperquarter*2/3/noteResolution)) + tempTimeStartNote;
 					if (itempo!=0) {
 						if (tempomat[itempo-1][1] > 255) {
-							tempomat[itempo][0] = (2*tempoResolution*4*tickperquarter*2/3/noteResolution)*(int)(0.5+(tempomat[itempo][0]-tempTimeStartNote)/(2.*tempoResolution*4*tickperquarter*2/3/noteResolution)) + tempTimeStartNote;
+							tempomat[itempo][0] = (2*tempoResolution*4.*tickperquarter*2/3/noteResolution)*(int)(0.5+(tempomat[itempo][0]-tempTimeStartNote)/(2.*tempoResolution*4*tickperquarter*2/3/noteResolution)) + tempTimeStartNote;
 						}
 					}
 				}
@@ -395,9 +410,9 @@ void do_ms2mml() {
 						if (!listTrackChannel[itrack][ichannel]) { continue; }
 						for (int isus=0; isus<sustainTrackChannel[itrack][ichannel].size(); isus++) {
 							if (!isTriplet) {
-								sustainTrackChannel[itrack][ichannel][isus][0] = (susResolution*4*tickperquarter/noteResolution)*(int)(0.5+(sustainTrackChannel[itrack][ichannel][isus][0]-tempTimeStartNote)/(susResolution*4.*tickperquarter/noteResolution)) + tempTimeStartNote;
+								sustainTrackChannel[itrack][ichannel][isus][0] = (susResolution*4.*tickperquarter/noteResolution)*(int)(0.5+(sustainTrackChannel[itrack][ichannel][isus][0]-tempTimeStartNote)/(susResolution*4.*tickperquarter/noteResolution)) + tempTimeStartNote;
 							} else {
-								sustainTrackChannel[itrack][ichannel][isus][0] = (susResolution*4*tickperquarter*2/3/noteResolution)*(int)(0.5+(sustainTrackChannel[itrack][ichannel][isus][0]-tempTimeStartNote)/(susResolution*4.*tickperquarter*2/3/noteResolution)) + tempTimeStartNote;
+								sustainTrackChannel[itrack][ichannel][isus][0] = (susResolution*4.*tickperquarter*2/3/noteResolution)*(int)(0.5+(sustainTrackChannel[itrack][ichannel][isus][0]-tempTimeStartNote)/(susResolution*4.*tickperquarter*2/3/noteResolution)) + tempTimeStartNote;
 							}
 							if (sustainTrackChannel[itrack][ichannel][isus][0] < tempTimeStartNote) { continue; }
 							if (sustainTrackChannel[itrack][ichannel][isus][0] > tempTimeEndNote) { continue; }
@@ -715,6 +730,7 @@ void do_ms2mml() {
 								} else {
 									append_error_to_vectorstr(&outputSayang, "There are too many tempo events/sustain events in this MIDI file, so it can't be output to fit 10,000-character sheet music. Try reducing the number with options such as $prefix$solo mergetempo 2 mergesustain 2, etc. Terminate execution.");
 								}
+								errorNow = true;
 								return;
 							}
 							outputtxt = outputtxtRollback;
@@ -799,6 +815,7 @@ void do_ms2mml() {
 								} else {
 									append_error_to_vectorstr(&outputSayang, "There are too many tempo events/sustain events in this MIDI file, so it can't be output to fit 10,000-character sheet music. Try reducing the number with options such as $prefix$solo mergetempo 2 mergesustain 2, etc. Terminate execution.");
 								}
+								errorNow = true;
 								return;
 							}
 							outputtxt = outputtxtRollback;
@@ -823,6 +840,7 @@ void do_ms2mml() {
 							}
 							cout << tempomat[0][0] << '\n';
 							cout << currentTime << '\n';
+							errorNow = true;
 							return;
 						}
 						if (!isTriplet) {
@@ -849,6 +867,7 @@ void do_ms2mml() {
 								} else {
 									append_error_to_vectorstr(&outputSayang, "There are too many tempo events/sustain events in this MIDI file, so it can't be output to fit 10,000-character sheet music. Try reducing the number with options such as $prefix$solo mergetempo 2 mergesustain 2, etc. Terminate execution.");
 								}
+								errorNow = true;
 								return;
 							}
 							outputtxt = outputtxtRollback;
@@ -885,6 +904,7 @@ void do_ms2mml() {
 								} else {
 									append_error_to_vectorstr(&outputSayang, "There are too many tempo events/sustain events in this MIDI file, so it can't be output to fit 10,000-character sheet music. Try reducing the number with options such as $prefix$solo mergetempo 2 mergesustain 2, etc. Terminate execution.");
 								}
+								errorNow = true;
 								return;
 							}
 							outputtxt = outputtxtRollback;
@@ -1006,6 +1026,7 @@ void do_ms2mml() {
 								} else {
 									append_error_to_vectorstr(&outputSayang, "There are too many tempo events/sustain events in this MIDI file, so it can't be output to fit 10,000-character sheet music. Try reducing the number with options such as $prefix$solo mergetempo 2 mergesustain 2, etc. Terminate execution.");
 								}
+								errorNow = true;
 								return;
 							}
 							outputtxt = outputtxtRollback;
@@ -1115,6 +1136,7 @@ void do_ms2mml() {
 								} else {
 									append_error_to_vectorstr(&outputSayang, "This file cannot be automatically split to fit 10,000 character scores. I think there are quite a few tempo setting events in the MIDI file. Try options like mergetempo 2.");
 								}
+								errorNow = true;
 								return;
 							} else {
 								if (!isEnglish) {
@@ -1122,6 +1144,7 @@ void do_ms2mml() {
 								} else {
 									append_error_to_vectorstr(&outputSayang, "This file cannot be automatically split to fit 10,000 character scores. Terminate execution. Try the ignore10000 or chorddivision option.");
 								}
+								errorNow = true;
 								return;
 							}
 						}
@@ -1145,6 +1168,7 @@ void do_ms2mml() {
 						} else {
 							append_error_to_vectorstr(&outputSayang, "One or more of the total chords cannot be converted because the number of chord characters exceeds 10,000. Try reducing the number of characters (resolution, mergetempo, mergesustain, etc.). If you think this is an error, please report it to the developer.");
 						}
+						errorNow = true;
 						return;
 					}
 					// if (iCountCharacter[iMaxCheck] < 10000 && iCountCharacter[iMaxCheck]+iCountCharacterPseudoSustain > 10000) {
@@ -1165,6 +1189,7 @@ void do_ms2mml() {
 						} else {
 							append_error_to_vectorstr(&outputSayang, "The written score exceeds 50 sheets and stops. Please check the length and conversion settings of the MIDI file. If you think this is an error, please contact the developer.");
 						}
+						errorNow = true;
 						return;
 					}
 				}
@@ -1195,6 +1220,7 @@ void do_ms2mml() {
 							} else {
 								append_error_to_vectorstr(&outputSayang, "The written score exceeds 50 sheets and stops. Please check the length and conversion settings of the MIDI file. If you think this is an error, please contact the developer.");
 							}
+							errorNow = true;
 							return;
 						}
 					}
