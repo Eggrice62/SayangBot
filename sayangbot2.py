@@ -436,9 +436,9 @@ async def on_message(message):
 			exampleEmbed.set_author(name=message.author.name + ' (' + str(message.author.id) + ')', icon_url=message.author.avatar_url)
 			await user.send(embed=exampleEmbed)
 		if isEnglish is False:
-			await sendError(message.channel, '죄송합니다, 이 파일은 현재의 SayangBot이 처리하기에 너무 큽니다.')
+			await sendError(message.channel, '죄송합니다, 버그 걸렸습니다. 업데이트를 기다려 주세요...')
 		else:
-			await sendError(message.channel, 'Sorry, this file is too large for the current SayangBot to process.')
+			await sendError(message.channel, 'Sorry, I got a bug. Please wait for the update...')
 		return
 
 async def sendError(a, b):

@@ -37,15 +37,18 @@ int transform_tempo(int t, vector<vector<int>> tempomat_local) {
 	}
 	
 	while (1) {
-		if (curTempoIndex < tempomat_local.size()-1) {
+		if (curTempoIndex+1 < tempomat_local.size()) {
 			if (t > tempomat_local[curTempoIndex+1][0]) {
 				newt += (tempomat_local[curTempoIndex+1][0] - tempomat_local[curTempoIndex][0]) * transformMat[curTempoIndex];
 			} else {
 				newt += (t - tempomat_local[curTempoIndex][0]) * transformMat[curTempoIndex];
 				break;
 			}
-		} else {
+		} else if (tempomat_local.size() > 0) {
 			newt += (t - tempomat_local[curTempoIndex][0]) * transformMat[curTempoIndex];
+			break;
+		} else {
+			newt = t;
 			break;
 		}
 		curTempoIndex++;

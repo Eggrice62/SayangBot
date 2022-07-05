@@ -794,6 +794,12 @@ void do_ms2mml() {
 								lintdotted = false;
 								continue;
 							}
+							if (iOnoffMotion) {
+								if (!currest && isFirstChannel && (starttime-currentTime)>tickperquarter*cooldownMotionInQuarter && isplaying) {
+									outputtxt += "m0";
+									isplaying = false;
+								}
+							}
 							int i = restlist[iListInd];
 							if (i != curlen) {
 								outputtxt += "l" + to_string(i);
@@ -802,12 +808,6 @@ void do_ms2mml() {
 							if (iListInd == restlist.size()-2) {
 								if (restlist[iListInd+1]==i*2) {
 									lintdotted = true;
-								}
-							}
-							if (iOnoffMotion) {
-								if (!currest && isFirstChannel && (starttime-currentTime)>tickperquarter*cooldownMotionInQuarter && isplaying) {
-									outputtxt += "m0";
-									isplaying = false;
 								}
 							}
 							currest = true;
@@ -1010,6 +1010,14 @@ void do_ms2mml() {
 							lintdotted = false;
 							continue;
 						}
+						if (iOnoffMotion) {
+							if (currest && isFirstChannel && !isplaying) {
+								float randomTempNumber = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+								int tempMotionNumber = (int)(randomTempNumber*5+1);
+								outputtxt += "m" + to_string(tempMotionNumber);
+								isplaying = true;
+							}
+						}
 						int i = notelist[ii];
 						if (i != curlen) {
 							outputtxt += "l" + to_string(i);
@@ -1028,14 +1036,6 @@ void do_ms2mml() {
 							lfirst = false;
 						} else {
 							lfirst = false;
-						}
-						if (iOnoffMotion) {
-							if (currest && isFirstChannel && !isplaying) {
-								float randomTempNumber = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-								int tempMotionNumber = (int)(randomTempNumber*5+1);
-								outputtxt += "m" + to_string(tempMotionNumber);
-								isplaying = true;
-							}
 						}
 						currest = false;
 						outputtxt += scaletoname(scalenumber);

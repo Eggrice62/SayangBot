@@ -45,6 +45,8 @@ vector<string> opt_ms2mml(string s) {
 		// cout << numLength[iCurrent] << endl;
 	// }
 	
+	if (listLength.size() == 0) { listLength.push_back("4"); }
+	
 	int iLengthNow = 0;
 	iCurrent = 0;
 	while (iCurrent < s.length()) {
@@ -83,7 +85,12 @@ vector<string> opt_ms2mml(string s) {
 	// cout << endl << "optimized : " << s << endl;
 	// cout << "length " << s.length() << endl;
 	
-	string lastUnoptLength = listLength[0];
+	string lastUnoptLength = "";
+	if (listLength.size() > 0) {
+		lastUnoptLength = listLength[0];
+	} else {
+		lastUnoptLength = "4";
+	}
 	for (iCurrent=0; iCurrent<numLength.size(); iCurrent++) {
 		if (numLength[iCurrent] > 1) {
 			lastUnoptLength = listLength[iCurrent];

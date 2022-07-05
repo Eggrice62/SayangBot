@@ -464,8 +464,8 @@ void read_input() {
 		} else if (args[0] == "대체악기사용안함") {
 			isAutoDaecheInstrument = false;
 			args.erase(args.begin());
-		// } else if (args[0] == "화음섞지않기") {
-			// lOnOff_candidate = false;
+		} else if (args[0] == "트랙악기분리") {
+			lSameTrackInstrument = true;
 			args.erase(args.begin());
 		} else if (args[0] == "템포배수") {
 			stringstream ssDouble(args[1]);
@@ -622,6 +622,8 @@ void read_input() {
 	inputSayang.push_back(to_string(isStrict));
 	inputSayang.push_back("isEnglish");
 	inputSayang.push_back(to_string(isEnglish));
+	inputSayang.push_back("lSameTrackInstrument");
+	inputSayang.push_back(to_string(lSameTrackInstrument));
 	
 	inputSayang.push_back("cooldownMotionInQuarter");
 	inputSayang.push_back(to_string(cooldownMotionInQuarter));

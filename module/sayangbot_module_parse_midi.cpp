@@ -225,7 +225,7 @@ void parse_midi() {
 				ichannel = customMidifile[itrack][ievent].channel+iPort[itrack]*16;
 				int targetPatch = customMidifile[itrack][ievent].data[0];
 				if (ichannel%16 == 9) { targetPatch = 128; }
-				currentchannelinstrument[ichannel].push_back(vector<int> {currentTime, targetPatch});
+				currentchannelinstrument[ichannel].push_back(vector<int> {currentTime, targetPatch, itrack});
 			}
 		}
 	}
@@ -235,7 +235,7 @@ void parse_midi() {
 	int removedElement = 0;
 	while (isRemoved) {
 		isRemoved = false;
-		for (int i=0; i<tempomat.size()-1; i++) {
+		for (int i=0; i+1<tempomat.size(); i++) {
 			if (tempomat[i][0] == tempomat[i+1][0]) {
 				isRemoved = true;
 				removedElement++;
@@ -259,7 +259,7 @@ void parse_midi() {
 	for (ichannel=0; ichannel<iMaxChannel; ichannel++) {
 		stable_sort(currentchannelvolume[ichannel].begin(), currentchannelvolume[ichannel].end(), sortby1stcol);
 		stable_sort(currentchannelinstrument[ichannel].begin(), currentchannelinstrument[ichannel].end(), sortby1stcol);
-		if (currentchannelinstrument[ichannel].size() == 0) { currentchannelinstrument[ichannel].push_back(vector<int> {0, 0}); }
+		if (currentchannelinstrument[ichannel].size() == 0) { currentchannelinstrument[ichannel].push_back(vector<int> {0, 0, -1}); }
 	}
 	
 	for (itrack=0; itrack<tracks; itrack++) {
@@ -333,7 +333,11 @@ void parse_midi() {
 					int currentSustain = customMidifile[itrack][ievent].data[1];
 					int currentchannelinstrumentvalue = 0;
 					for (iInstr=0; iInstr<currentchannelinstrument[ichannel].size(); iInstr++) {
-						if (currentchannelinstrument[ichannel][iInstr][0] <= currentTime) { currentchannelinstrumentvalue = currentchannelinstrument[ichannel][iInstr][1]; }
+						bool isSameTrack = true;
+						if (lSameTrackInstrument) {
+							isSameTrack = (currentchannelinstrument[ichannel][iInstr][2] == itrack);
+						}
+						if ((currentchannelinstrument[ichannel][iInstr][0] <= currentTime) && isSameTrack) { currentchannelinstrumentvalue = currentchannelinstrument[ichannel][iInstr][1]; }
 					}
 					int icurrentinstrument = currentchannelinstrumentvalue;
 					if (customMidifile[itrack][ievent].channel%16 == 9) {
@@ -366,7 +370,11 @@ void parse_midi() {
 					int icurrentvolume = (int) (currentchannelvolumevalue/100. * customMidifile[itrack][ievent].data[1]);
 					int currentchannelinstrumentvalue = 0;
 					for (iInstr=0; iInstr<currentchannelinstrument[ichannel].size(); iInstr++) {
-						if (currentchannelinstrument[ichannel][iInstr][0] <= currentTime) { currentchannelinstrumentvalue = currentchannelinstrument[ichannel][iInstr][1]; }
+						bool isSameTrack = true;
+						if (lSameTrackInstrument) {
+							isSameTrack = (currentchannelinstrument[ichannel][iInstr][2] == itrack);
+						}
+						if ((currentchannelinstrument[ichannel][iInstr][0] <= currentTime) && isSameTrack) { currentchannelinstrumentvalue = currentchannelinstrument[ichannel][iInstr][1]; }
 					}
 					int icurrentinstrument = currentchannelinstrumentvalue;
 					if (customMidifile[itrack][ievent].channel%16 == 9) {
@@ -546,7 +554,7 @@ void parse_midi() {
 	for (int ichannel=0; ichannel<iMaxChannel; ichannel++) {
 		outputMidiInstr << "channel " << ichannel << '\n';
 		for (int iTempo=0; iTempo<currentchannelinstrument[ichannel].size(); iTempo++) {
-			outputMidiInstr << currentchannelinstrument[ichannel][iTempo][0] << " " << currentchannelinstrument[ichannel][iTempo][1] << '\n';
+			outputMidiInstr << currentchannelinstrument[ichannel][iTempo][0] << " " << currentchannelinstrument[ichannel][iTempo][1] << " " << currentchannelinstrument[ichannel][iTempo][2] << '\n';
 		}
 	}
 	

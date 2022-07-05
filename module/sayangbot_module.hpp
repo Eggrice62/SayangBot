@@ -44,6 +44,7 @@ bool isAutoEnhance = true;
 bool isAutoDaecheInstrument = true;
 bool isStrict = false;
 bool isEnglish = false;
+bool lSameTrackInstrument = false;
 
 double cooldownMotionInQuarter = 7;
 double volumeAdd1 = 0.;
