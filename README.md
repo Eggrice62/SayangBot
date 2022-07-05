@@ -2,12 +2,9 @@
 - 기존 SayangBot 사용 명령어 맨 앞에 . 을 붙이면 SayangBot2가 동작합니다.
 * 예시) .%악보 / .%합주악보
 
-### SayangBot2 릴리즈 및 구버전 SayangBot 지원 (2022/8/1 ~ 2022/8/31)
+### SayangBot2 릴리즈 및 구버전 SayangBot 지원 (2022/8/1 ~ )
 - 기존 SayangBot 사용 명령어 입력 시 SayangBot2가 동작합니다.
 - 명령어 맨 앞에 . 을 붙이면 구버전 SayangBot이 동작합니다.
-
-### 구버전 SayangBot 지원 중단 (2022/9/1)
-- 명령어 맨 앞에 . 을 붙여도 아무 일도 일어나지 않는다!
 
 # SayangBot
 
@@ -110,6 +107,12 @@ Or you can contact me on Discord (계란밥#9331).
 It will be a great help for development. thank you.
 
 # 업데이트 내역
+
+## 2022/7/6
+- 동일 트랙의 악기 변경 이벤트만 사용하는 옵션 (트랙악기분리) 추가
+- 모션 사용 시 최적화 단계에서 싱크가 작살나는 버그 수정
+- 짧은 악보 최적화하다가 버그 걸려서 죽는 것 수정
+- 템포 이벤트가 없을 때 버그 걸려서 죽는 것 수정
 
 ## 2022/6/22
 - SayangBot2 BETA 테스트 시작
