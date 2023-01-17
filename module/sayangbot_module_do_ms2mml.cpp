@@ -643,24 +643,18 @@ void do_ms2mml() {
 			bool isplaying = false;
 			vector<int> iCountCharacter {};
 			vector<string> cCharacter {};
-			int iCountCharacterPseudoSustain {};
+			int iCountCharacterPseudoSustain = 0;
 			string cCharacterPseudoSustain {};
 			bool istempsusinter = false;
 			bool iscontinuednote = false;
 			
 			susmat = susmat_orig;
-			if (susmat.size() >= 2) {
-				susmat[susmat.size()-1][0] = susmat[susmat.size()-2][0];
-			} else if (susmat.size() >= 1) {
-				susmat[susmat.size()-1][0] = maxLengthTrack;
-			} else {
-				// pass;
-			}
 			
 			while (!lfinish) {
 				vector<vector<int>> Notes2 {};
 				vector<vector<int>> susmat2 {};
 				tempomat = tempomat_orig;
+				bool atLeast1NotesWritten = false;
 				
 				while (Notes.size() + susmat.size() > 0) {
 					bool isSustainComing = false;
@@ -746,19 +740,21 @@ void do_ms2mml() {
 						}
 					}
 					
-					if (outputtxt.length()>lengthHorizontalDivision) {
+					if (outputtxt.length()>lengthHorizontalDivision-iCountCharacterPseudoSustain && !lOnoffHorizontalDivision) {
 						vector<string> tempOptVec = opt_ms2mml(outputtxt);
 						outputtxt = tempOptVec[0];
 						stringstream ssInt(tempOptVec[1]);
 						ssInt >> curlen;
-						if (outputtxt.length()>lengthHorizontalDivision) {
-							if (Notes2.size() == 0) {
+						if (outputtxt.length()>lengthHorizontalDivision-iCountCharacterPseudoSustain) {
+							if (!atLeast1NotesWritten) {
 								if (!isEnglish) {
 									append_error_to_vectorstr(&outputSayang, "이 미디 파일에는 템포 조정 이벤트가 너무 많아서 1만자 악보에 맞게 출력할 수 없습니다. $prefix$악보 템포뭉개기 2 서스테인뭉개기 2 등의 옵션으로 개수를 줄여 보세요. 실행을 종료합니다.");
 								} else {
 									append_error_to_vectorstr(&outputSayang, "There are too many tempo events in this MIDI file, so it can't be output to fit 10,000-character sheet music. Try reducing the number with options such as $prefix$solo mergetempo 2 mergesustain 2, etc. Terminate execution.");
 								}
 								errorNow = true;
+								cout << outputtxt << endl;
+								stdout_var(cCharacter);
 								return;
 							}
 							if (curchord == -1 && susmat.size() > 0) {
@@ -836,19 +832,21 @@ void do_ms2mml() {
 							}
 						}
 					}
-					if (outputtxt.length()>lengthHorizontalDivision) {
+					if (outputtxt.length()>lengthHorizontalDivision-iCountCharacterPseudoSustain && !lOnoffHorizontalDivision) {
 						vector<string> tempOptVec = opt_ms2mml(outputtxt);
 						outputtxt = tempOptVec[0];
 						stringstream ssInt(tempOptVec[1]);
 						ssInt >> curlen;
-						if (outputtxt.length()>lengthHorizontalDivision) {
-							if (Notes2.size() == 0) {
+						if (outputtxt.length()>lengthHorizontalDivision-iCountCharacterPseudoSustain) {
+							if (!atLeast1NotesWritten) {
 								if (!isEnglish) {
 									append_error_to_vectorstr(&outputSayang, "이 미디 파일에는 템포 조정 이벤트가 너무 많아서 1만자 악보에 맞게 출력할 수 없습니다. $prefix$악보 템포뭉개기 2 서스테인뭉개기 2 등의 옵션으로 개수를 줄여 보세요. 실행을 종료합니다.");
 								} else {
 									append_error_to_vectorstr(&outputSayang, "There are too many tempo events in this MIDI file, so it can't be output to fit 10,000-character sheet music. Try reducing the number with options such as $prefix$solo mergetempo 2 mergesustain 2, etc. Terminate execution.");
 								}
 								errorNow = true;
+								cout << outputtxt << endl;
+								stdout_var(cCharacter);
 								return;
 							}
 							if (curchord == -1 && susmat.size() > 0) {
@@ -893,19 +891,21 @@ void do_ms2mml() {
 						tempomat.erase(tempomat.begin());
 						continue;
 					}
-					if (outputtxt.length()>lengthHorizontalDivision) {
+					if (outputtxt.length()>lengthHorizontalDivision-iCountCharacterPseudoSustain && !lOnoffHorizontalDivision) {
 						vector<string> tempOptVec = opt_ms2mml(outputtxt);
 						outputtxt = tempOptVec[0];
 						stringstream ssInt(tempOptVec[1]);
 						ssInt >> curlen;
-						if (outputtxt.length()>lengthHorizontalDivision) {
-							if (Notes2.size() == 0) {
+						if (outputtxt.length()>lengthHorizontalDivision-iCountCharacterPseudoSustain) {
+							if (!atLeast1NotesWritten) {
 								if (!isEnglish) {
 									append_error_to_vectorstr(&outputSayang, "이 미디 파일에는 템포 조정 이벤트가 너무 많아서 1만자 악보에 맞게 출력할 수 없습니다. $prefix$악보 템포뭉개기 2 서스테인뭉개기 2 등의 옵션으로 개수를 줄여 보세요. 실행을 종료합니다.");
 								} else {
 									append_error_to_vectorstr(&outputSayang, "There are too many tempo events in this MIDI file, so it can't be output to fit 10,000-character sheet music. Try reducing the number with options such as $prefix$solo mergetempo 2 mergesustain 2, etc. Terminate execution.");
 								}
 								errorNow = true;
+								cout << outputtxt << endl;
+								stdout_var(cCharacter);
 								return;
 							}
 							if (curchord == -1 && susmat.size() > 0) {
@@ -935,18 +935,20 @@ void do_ms2mml() {
 						susmat.erase(susmat.begin());
 						continue;
 					}
-					if (outputtxt.length()>lengthHorizontalDivision) {
+					if (outputtxt.length()>lengthHorizontalDivision-iCountCharacterPseudoSustain && !lOnoffHorizontalDivision) {
 						vector<string> tempOptVec = opt_ms2mml(outputtxt);
 						outputtxt = tempOptVec[0];
 						stringstream ssInt(tempOptVec[1]);
 						ssInt >> curlen;
-						if (outputtxt.length()>lengthHorizontalDivision) {
-							if (Notes2.size() == 0) {
+						if (outputtxt.length()>lengthHorizontalDivision-iCountCharacterPseudoSustain) {
+							if (!atLeast1NotesWritten) {
 								if (!isEnglish) {
 									append_error_to_vectorstr(&outputSayang, "이 미디 파일에는 템포 조정 이벤트가 너무 많아서 1만자 악보에 맞게 출력할 수 없습니다. $prefix$악보 템포뭉개기 2 서스테인뭉개기 2 등의 옵션으로 개수를 줄여 보세요. 실행을 종료합니다.");
 								} else {
 									append_error_to_vectorstr(&outputSayang, "There are too many tempo events in this MIDI file, so it can't be output to fit 10,000-character sheet music. Try reducing the number with options such as $prefix$solo mergetempo 2 mergesustain 2, etc. Terminate execution.");
 								}
+								cout << outputtxt << endl;
+								stdout_var(cCharacter);
 								errorNow = true;
 								return;
 							}
@@ -1062,18 +1064,20 @@ void do_ms2mml() {
 							currentTime = currentTime + notetotime2(i,tickperquarter)/2;
 						}
 					}
-					if (outputtxt.length()>lengthHorizontalDivision) {
+					if (outputtxt.length()>lengthHorizontalDivision-iCountCharacterPseudoSustain && !lOnoffHorizontalDivision) {
 						vector<string> tempOptVec = opt_ms2mml(outputtxt);
 						outputtxt = tempOptVec[0];
 						stringstream ssInt(tempOptVec[1]);
 						ssInt >> curlen;
-						if (outputtxt.length()>lengthHorizontalDivision) {
-							if (Notes2.size() == 0) {
+						if (outputtxt.length()>lengthHorizontalDivision-iCountCharacterPseudoSustain) {
+							if (!atLeast1NotesWritten) {
 								if (!isEnglish) {
 									append_error_to_vectorstr(&outputSayang, "이 미디 파일에는 템포 조정 이벤트가 너무 많아서 1만자 악보에 맞게 출력할 수 없습니다. $prefix$악보 템포뭉개기 2 서스테인뭉개기 2 등의 옵션으로 개수를 줄여 보세요. 실행을 종료합니다.");
 								} else {
 									append_error_to_vectorstr(&outputSayang, "There are too many tempo events in this MIDI file, so it can't be output to fit 10,000-character sheet music. Try reducing the number with options such as $prefix$solo mergetempo 2 mergesustain 2, etc. Terminate execution.");
 								}
+								cout << outputtxt << endl;
+								stdout_var(cCharacter);
 								errorNow = true;
 								return;
 							}
@@ -1101,6 +1105,7 @@ void do_ms2mml() {
 					}
 					if (!istempsusinter) {
 						Notes.erase(Notes.begin());
+						atLeast1NotesWritten = true;
 					} else {
 						Notes[0][4] = endtime;
 						iscontinuednote = true;
