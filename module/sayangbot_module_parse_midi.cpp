@@ -11,7 +11,6 @@ using namespace smf;
 void parse_midi() {
 	if (errorNow) { return; }
 	
-	iFixedInstrument = vector<int> (1, -1);
 	tracks = 1;
 	tickperquarter = 320;
 	

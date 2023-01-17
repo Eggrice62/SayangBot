@@ -151,6 +151,7 @@ void send_ms2mml_files() {
 		if (iWritten != 0) { tempstring += "$newline$"; }
 		tempstring += "$newline$[" + writtenFileList_final[iWritten] + "]$newline$\t[글자 수] : " + to_string(writtenCharacterList_final[iWritten]) + "$newline$\t[화음 수] : " + to_string(writtenChordList_final[iWritten]);
 		if (iWritten == writtenFileList_final.size() - 1) { tempstring += "$newline$```"; }
+		if (tempstring.length() > 1500 && iWritten != writtenFileList_final.size() - 1) { tempstring += "$newline$```"; append_text_to_vectorstr(&outputSayang, tempstring); tempstring = "$newline$```ini"; }
 	}
 	append_text_to_vectorstr(&outputSayang, tempstring);
 	append_file_to_vectorstr(&outputSayang, outputFileSendName);

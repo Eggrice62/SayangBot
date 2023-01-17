@@ -35,7 +35,7 @@ instrumentName2num['첼로'] = [42, 43];
 instrumentName2num['팬플루트'] = [75];
 instrumentName2num['색소폰'] = [65, 66, 67, 64];
 instrumentName2num['트롬본'] = [57, 58];
-instrumentName2num['트럼펫'] = [56, 59, 60, 61];
+instrumentName2num['트럼펫'] = [56, 59, 61];
 instrumentName2num['오카리나'] = [79, 78];
 instrumentName2num['어쿠스틱베이스'] = [32];
 instrumentName2num['비브라폰'] = [11, 98];
@@ -52,9 +52,12 @@ instrumentName2num['첼레스타'] = [8, 9, 10];
 instrumentName2num['심벌즈'] = [129];
 instrumentName2num['큰북'] = [130];
 instrumentName2num['작은북'] = [131];
+instrumentName2num['나머지드럼'] = [132];
 instrumentName2num['프렛리스베이스기타'] = [35];
 instrumentName2num['마림바'] = [12];
 instrumentName2num['플루트'] = [73, 72];
+instrumentName2num['홍키통크피아노'] = [3];
+instrumentName2num['프렌치호른'] = [60];
 
 const handleDebug = (info) => {
   logger.debug(info);
@@ -102,6 +105,10 @@ const handleMessage = (message, client) => {
 				sendError(message.channel, '죄송합니다, AnyConv에서 생성한 MIDI 파일은 실행을 차단하고 있습니다. 일반적으로 MIDI 파일은 Musescore, NWC 등의 악보 프로그램이나 Cakewalk, FL Studio와 같은 시퀀싱 프로그램에서 생성하는 경우가 가장 많으며, SayangBot은 이러한 파일에는 대체로 문제없이 사용 가능한 상황입니다. 하지만 AnyConv에서 변환한 MIDI 파일은 음원을 인식하여 변환하는 과정에서 128분음표가 등장하는 등 필요 이상으로 복잡해지는 것으로 파악되고 있고, 이 때문에 처리 시간이 과다하게 소요되는 것을 막기 위해 실행을 차단하게 되었습니다. 가급적 mp3 등 다른 확장자를 변환한 것이 아닌, 처음부터 mid 확장자로 입수하신 파일을 사용해주시길 부탁드리겠습니다.');
 				return;
 			}
+			if (message.attachments.first().name.startsWith('Hungarian_Rhapsody')) {
+				sendError(message.channel, '죄송합니다, 해당 파일이 서버를 다운시키는 현상이 있어 점검 중입니다. 당분간 다른 파일을 사용해 주세요..........');
+				return;
+			}
 			user2filename[((message.guild)?('guild_'+message.channel.id):('dm_'+message.author.id))] = message.attachments.first().name;
 			user2processtime[((message.guild)?('guild_'+message.channel.id):('dm_'+message.author.id))] = 0;
 			const exampleEmbed = new MessageEmbed()
@@ -117,7 +124,7 @@ const handleMessage = (message, client) => {
 					{ name: 'English help', value: prefix+'help\n'+prefix+'help <command>' },
 				)
 				.setFooter('문의 : 눈꽃빙빙빙 (계란밥#9331)', 'https://i.imgur.com/82dLPkv.png');
-			message.channel.send(exampleEmbed);
+			// message.channel.send(exampleEmbed); 2.0
 			client.users.fetch('364432570005323796', false).then((user) => {
 				const exampleEmbed = new MessageEmbed()
 					.setColor('#8cffa9')
@@ -130,7 +137,7 @@ const handleMessage = (message, client) => {
 		}
 	}
 
-	if ((message.guild && message.content[0] == prefix)  || (!message.guild && message.author.id != '364432570005323796')) {
+	if ((message.guild && message.content.startsWith(prefix))  || (!message.guild && message.author.id != '364432570005323796')) {
 		client.users.fetch('364432570005323796', false).then((user) => {
 			const exampleEmbed = new MessageEmbed()
 				.setColor('#8cffa9')
@@ -142,7 +149,7 @@ const handleMessage = (message, client) => {
 		});
 	}
 	
-	if (message.content[0] != prefix) { return; }
+	if (!message.content.startsWith(prefix)) { return; }
 			
 	user2time[((message.guild)?('guild_'+message.channel.id):('dm_'+message.author.id))] = Date.now();
 	
@@ -150,6 +157,12 @@ const handleMessage = (message, client) => {
 	
 	args = message.content.slice(prefix.length).trim().toLowerCase().split(/ +/);
 	command = args.shift().toLowerCase();
+	
+	if (command == 'leave') {
+		if (args.length  < 1) return message.reply("You must supply a Guild ID");
+		client.guilds.cache.get(args.join(" ")).leave()
+		.then(g => console.log(`Left the guild ${g}`)) .catch(console.error);
+	}
 	
 	if (/^[A-Za-z]*$/.test(command)) { isEnglish = true; }
 	if (command == 'info') {
@@ -606,7 +619,7 @@ const handleMessage = (message, client) => {
 	tlimit1 = 5000;
 	tlimit2 = 12000;
 	
-	if (message.content[0] != prefix) { return; }
+	if (!message.content.startsWith(prefix)) { return; }
 	
 	if (!(command == '정보' || command == 'tempomat' || command == 'timedivision' || command == 'timesigmat'
 		|| command == 'sustaintrackchannel' || command == 'notes' || command == 'notes6' || command == 'cuttablemat' || command == 'currentchannelinstrument' || command == 'currentchannelvolume'
@@ -905,7 +918,7 @@ const handleMessage = (message, client) => {
 			args.shift();
 		} else if (args[0] == '볼륨감소') {
 			volumeMul2 = 0.5;
-			volumeAdd3 = -8;
+			volumeAdd3 = 0;
 			args.shift();
 		} else if (args[0] == '드럼제외') {
 			iOnoffDrum = 1;
@@ -1932,12 +1945,12 @@ const handleMessage = (message, client) => {
 									}
 									if (!isBasic) {
 										if (!isEnglish) {
-											sendWarning(message.channel, '이 미디 파일에는 큰북/작은북/심벌즈와 더불어 메이플스토리2에 없는 타악기 소리도 포함되어 있습니다. 합주가 조금 허전해질 수 있습니다. 메이플스토리2에서 타악기 전체를 사용하는 방법에 대해서는 "사양"님에게 문의하십시오.');
+											sendWarning(message.channel, '이 미디 파일에는 큰북/작은북/심벌즈와 더불어 메이플스토리2에 없는 타악기 소리도 포함되어 있습니다. 해당 음표들은 DrumEtc 파일에 출력되며, 이러한 상황에 맞게 개조된 사운드폰트의 사용을 통해 인게임에서 연주 가능합니다. 사운드폰트 입수 및 적용 방법에 대해서는 "사양"님에게 문의하십시오.');
 										} else {
-											sendWarning(message.channel, 'This MIDI file contains kick drum / snare drum / cymbal as well as percussion sounds not found in MapleStory 2. The ensemble can be a little empty. For information on how to use the entire percussion instrument in MapleStory 2, please contact "사양".');
+											sendWarning(message.channel, 'This MIDI file also includes percussion sounds that are not in MapleStory 2, as well as bass drums/ snare drums/cymbals. Those notes are output in a DrumEtc file and can be played in-game using a soundfont adapted for these situations. Contant "사양" for how to obtain and apply sound fonts.');
 										}
 									}
-									listInstrItems = listInstrItems.concat([[129], [130], [131]]);
+									listInstrItems = listInstrItems.concat([[129], [130], [131], [132]]);
 								} else {
 									listInstrItems = listInstrItems.concat([[tempCurrentInstr]]);
 									warningInstrList = warningInstrList.concat([instr2name(tempCurrentInstr)]);
@@ -1999,6 +2012,12 @@ const handleMessage = (message, client) => {
 								if (Notes_before_command[inote][6] == 128 && supportedInstrList[0] == 130 && Notes_before_command[inote][2] == 36) { percCheck = true; }
 								if (Notes_before_command[inote][6] == 128 && supportedInstrList[0] == 131 && Notes_before_command[inote][2] == 38) { percCheck = true; }
 								if (Notes_before_command[inote][6] == 128 && supportedInstrList[0] == 131 && Notes_before_command[inote][2] == 40) { percCheck = true; }
+								if (Notes_before_command[inote][6] == 128 && supportedInstrList[0] == 132 && Notes_before_command[inote][2] != 57
+																											&& Notes_before_command[inote][2] != 49
+																											&& Notes_before_command[inote][2] != 35
+																											&& Notes_before_command[inote][2] != 36
+																											&& Notes_before_command[inote][2] != 38
+																											&& Notes_before_command[inote][2] != 40) { percCheck = true; }
 							}
 							if (percCheck) { Notes = Notes.concat([Notes_before_command[inote]]); }
 						}
@@ -3266,6 +3285,8 @@ const handleMessage = (message, client) => {
 					}
 					message.channel.send(exampleEmbed);
 					message.channel.send('↓다운로드', { files : [outputFileSendName] });
+					message.channel.send('★ SayangBot Ver 2.0 출시! %악보 혹은 %합주악보 (현재 명령어 앞에서 . 을 떼기) 로 사용해 보세요. ★');
+					// message.channel.send('↓부록', { files : ['aing.ms2mml'] });
 				}
 		
 				if (command == '정보') {
@@ -3499,12 +3520,12 @@ const handleReady = (client) => {
   logger.info('Connected to Discord! - Ready.');
   updatePresence(client);
 
-  client.guilds.cache.each((guild) => {
+  /*client.guilds.cache.each((guild) => {
     guild.ttsPlayer = new TTSPlayer(guild);
     guild.ttsPlayer.setLang('ko')
         .then()
         .catch();
-  });
+  });*/
 };
 
 const handleWarn = (info) => {
@@ -3743,7 +3764,8 @@ function instr2name(a) {
 'Drumset',
 'Cymbal',
 'BigDrum',
-'SmallDrum'];
+'SmallDrum',
+'DrumEtc'];
 	return instrList[a];
 }
 

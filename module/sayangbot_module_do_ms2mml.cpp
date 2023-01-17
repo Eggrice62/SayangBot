@@ -162,14 +162,15 @@ void do_ms2mml() {
 					}
 					if (!isBasic && !lOnOff_candidate) {
 						if (!isEnglish) {
-							append_warning_to_vectorstr(&outputSayang, "이 미디 파일에는 큰북/작은북/심벌즈와 더불어 메이플스토리2에 없는 타악기 소리도 포함되어 있습니다. 합주가 조금 허전해질 수 있습니다. 메이플스토리2에서 타악기 전체를 사용하는 방법에 대해서는 '사양'님에게 문의하십시오.");
+							append_warning_to_vectorstr(&outputSayang, "이 미디 파일에는 큰북/작은북/심벌즈와 더불어 메이플스토리2에 없는 타악기 소리도 포함되어 있습니다. 해당 음표들은 DrumEtc 파일에 출력되며, 이러한 상황에 맞게 개조된 사운드폰트의 사용을 통해 인게임에서 연주 가능합니다. 사운드폰트 입수 및 적용 방법에 대해서는 '사양'님에게 문의하십시오.");
 						} else {
-							append_warning_to_vectorstr(&outputSayang, "This MIDI file contains kick drum / snare drum / cymbal as well as percussion sounds not found in MapleStory 2. The ensemble can be a little empty. For information on how to use the entire percussion instrument in MapleStory 2, please contact '사양'.");
+							append_warning_to_vectorstr(&outputSayang, "This MIDI file also includes percussion sounds that are not in MapleStory 2, as well as bass drums/ snare drums/cymbals. Those notes are output in a DrumEtc file and can be played in-game using a soundfont adapted for these situations. Contant '사양' for how to obtain and apply sound fonts.");
 						}
 					}
 					listInstrItems.push_back(vector<int> {129});
 					listInstrItems.push_back(vector<int> {130});
 					listInstrItems.push_back(vector<int> {131});
+					listInstrItems.push_back(vector<int> {132});
 				} else {
 					listInstrItems.push_back(vector<int> {tempCurrentInstr});
 					warningInstrList.push_back(instr2name(tempCurrentInstr));
@@ -251,8 +252,19 @@ void do_ms2mml() {
 				if (Notes_before_command[inote][6] == 128 && supportedInstrList[0] == 130 && Notes_before_command[inote][2] == 36) { percCheck = true; }
 				if (Notes_before_command[inote][6] == 128 && supportedInstrList[0] == 131 && Notes_before_command[inote][2] == 38) { percCheck = true; }
 				if (Notes_before_command[inote][6] == 128 && supportedInstrList[0] == 131 && Notes_before_command[inote][2] == 40) { percCheck = true; }
+				if (Notes_before_command[inote][6] == 128 && supportedInstrList[0] == 132 && Notes_before_command[inote][2] != 57
+																							&& Notes_before_command[inote][2] != 49
+																							&& Notes_before_command[inote][2] != 35
+																							&& Notes_before_command[inote][2] != 36
+																							&& Notes_before_command[inote][2] != 38
+																							&& Notes_before_command[inote][2] != 40) { percCheck = true; }
 			}
 			if (percCheck) { Notes.push_back(Notes_before_command[inote]); }
+		}
+		ofstream outputMidiNotes4("165notes_filtered.sayang");
+		int tempNoteSize = Notes.size();
+		for (int i=0; i<tempNoteSize; i++) {
+			outputMidiNotes4 << Notes[i][0] << '\t' << Notes[i][1] << '\t' << Notes[i][2] << '\t' << Notes[i][3] << '\t' << Notes[i][4] << '\t' << Notes[i][5] << '\t' << Notes[i][6] << '\n';
 		}
 		
 		if (Notes.size() == 0) {
@@ -328,7 +340,7 @@ void do_ms2mml() {
 				Notes = Notes_orig;
 				tempomat = tempomat_orig_orig;
 				sustainTrackChannel = sustainTrackChannel_orig;
-				if (icuttable[1] < 0 && icuttable[2] == cuttableMat.size()-1) {
+				if (icuttable[1] < 0) { // && icuttable[2] == cuttableMat.size()-1) {
 					tempTimeStartNote = cuttableMat[icuttable[0]];
 					tempTimeEndNote = cuttableMat[icuttable[2]];
 				} else {
@@ -608,6 +620,11 @@ void do_ms2mml() {
 			stable_sort(Notes.begin(), Notes.end(), sortFunctionByStarttime);
 			// console.log(Notes.size());
 			// console.log(Notes);
+			ofstream outputMidiNotes3("17notes_filtered.sayang");
+			int tempNoteSize = Notes.size();
+			for (int i=0; i<tempNoteSize; i++) {
+				outputMidiNotes3 << Notes[i][0] << '\t' << Notes[i][1] << '\t' << Notes[i][2] << '\t' << Notes[i][3] << '\t' << Notes[i][4] << '\t' << Notes[i][5] << '\t' << Notes[i][6] << '\n';
+			}
 			
 			int currentTime = tempTimeStartNote;
 			
@@ -678,7 +695,7 @@ void do_ms2mml() {
 								int notenumber = curnote[2];
 								int volnumber = curnote[3];
 								int thisoct = ((notenumber-12)/12);
-								int thisvol = (int)(((volnumber+volumeAdd1*8.)*volumeMul2+volumeAdd3*8.)/8.);
+								int thisvol = (int)(((volnumber+volumeAdd1*8.)*volumeMul2+volumeAdd3*8.)/8.+0.51);
 								vector<int> tempnotelist = get_length_list2_nonexpand(curnote[5]-curnote[4],tickperquarter,noteResolution);
 								int thislen = -1;
 								if (tempnotelist.size() > 0) {
@@ -959,7 +976,7 @@ void do_ms2mml() {
 						int notenumber = curnote[2];
 						int volnumber = curnote[3];
 						thisoct = ((notenumber-12)/12);
-						thisvol = (int)(((volnumber+volumeAdd1*8.)*volumeMul2+volumeAdd3*8.)/8.);
+						thisvol = (int)(((volnumber+volumeAdd1*8.)*volumeMul2+volumeAdd3*8.)/8.+0.51);
 						thisvol = (thisvol>15)?15:thisvol;
 						thisvol = (thisvol <0)?0 :thisvol;
 						scalenumber = notenumber%12;
@@ -1236,7 +1253,7 @@ void do_ms2mml() {
 				}
 				if (lOnoffVerticalDivision) { iCurrentWriteVertical = 0; isFirstChord = true; }
 				
-				vector<bool> isWritten (curchord, false);
+				vector<bool> isWritten (11, false);
 				bool tempIOnoffVerticalDivision = lOnoffVerticalDivision;
 				if (lOnoffVerticalDivision && (curchord < ceil(lengthHorizontalDivision/10000))) {
 					if (!lOnOff_candidate) {

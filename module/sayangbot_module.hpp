@@ -223,6 +223,7 @@ vector<int> instrumentName2num(string s) {
 	if (s.compare("심벌즈")==0) {vector<int> v = {129}; return v;}
 	if (s.compare("큰북")==0) {vector<int> v = {130}; return v;}
 	if (s.compare("작은북")==0) {vector<int> v = {131}; return v;}
+	if (s.compare("나머지드럼")==0) {vector<int> v = {132}; return v;}
 	if (s.compare("프렛리스베이스기타")==0) {vector<int> v = {35}; return v;}
 	if (s.compare("마림바")==0) {vector<int> v = {12}; return v;}
 	if (s.compare("플루트")==0) {vector<int> v = {73, 72}; return v;}
@@ -236,7 +237,7 @@ vector<string> instrumentNameList {"피아노", "기타", "클라리넷", "하�
 "팬플루트", "색소폰", "트롬본", "트럼펫", "오카리나",
 "어쿠스틱베이스", "비브라폰", "전자피아노", "스틸드럼", "피크베이스기타",
 "오보에", "피치카토바이올린", "하프시코드", "하모니카", "실로폰",
-"리코더", "첼레스타", "심벌즈", "큰북", "작은북",
+"리코더", "첼레스타", "심벌즈", "큰북", "작은북", "나머지드럼",
 "프렛리스베이스기타", "마림바", "플루트", "홍키통크피아노", "프렌치호른"};
 
 string instr2name(int a) {
@@ -371,7 +372,8 @@ string instr2name(int a) {
 "Drumset",
 "Cymbal",
 "BigDrum",
-"SmallDrum"};
+"SmallDrum",
+"DrumEtc"};
 	return instrList[a];
 }
 
@@ -446,11 +448,11 @@ vector<int> get_length_list2_expand(int dur, int tpq, int resolution) {
 	int curres = 1;
 	int tempResolution = 10;
 	while (dur > 0 && curres <= resolution) {
-		if (abs(dur - 4*tpq) < 4*tpq/tempResolution) {
+		if (abs(dur - 4*tpq) < 2*tpq/tempResolution) {
 		// if (abs(dur - 4*tpq) < 4*tpq/resolution && dur > 4*tpq) {
 			larray.push_back(1);
 			break;
-		} else if (abs(dur - 3*tpq) < 3*tpq/tempResolution) {
+		} else if (abs(dur - 3*tpq) < 2*tpq/tempResolution) {
 		// } else if (abs(dur - 3*tpq) < 3*tpq/resolution && dur > 3*tpq) {
 			larray.push_back(2);
 			larray.push_back(4);

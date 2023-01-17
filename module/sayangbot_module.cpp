@@ -57,7 +57,7 @@ int main(int argc, char *argv[]) {
 		
 		send_ms2mml_files();
 	}
-	append_information_to_vectorstr(&outputSayang, "SayangBot2 BETA 테스트 기간입니다. (~2022/7/31)$newline$버그가 있다면 편히 제보해주시면 큰 도움이 됩니다. 감사합니다.");
+	append_information_to_vectorstr(&outputSayang, "SayangBot이 버전 2.0으로 업데이트 되었습니다. (자꾸 봇이 죽음 ㅠㅠ) 구버전 봇을 사용하시려면 명령어 맨 앞에 . 을 붙여서 .%악보 와 같이 사용해 주세요. 만약 .%악보 쳤는데 반응이 없다면 또 죽은 것이니 몇 시간 이내로 살아날 것입니다. 변환 실패 뜨는 것들은 언젠가 날잡아서 고치겠습니다...");
 	write_file_from_string_vector("99output.sayang", outputSayang);
 	return 0;
 	
