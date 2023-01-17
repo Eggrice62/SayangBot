@@ -337,7 +337,7 @@ void read_input() {
 			args.erase(args.begin());
 		} else if (args[0] == "볼륨감소") {
 			volumeMul2 = 0.5;
-			volumeAdd3 = -8;
+			volumeAdd3 = 0;
 			args.erase(args.begin());
 		} else if (args[0] == "드럼제외") {
 			iOnoffDrum = 1;
