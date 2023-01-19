@@ -409,6 +409,32 @@ void read_input() {
 				}
 			}
 			args.erase(args.begin()); args.erase(args.begin());
+		} else if (args[0] == "최소템포") {
+			stringstream ssInt(args[1]);
+			ssInt >> args1i;
+			if (!ssInt.fail()) {
+				if ((args1i >= 8 && args1i < 32) or (args1i > 255 && args1i <= 510)) {
+					if (!isEnglish) {
+						append_warning_to_vectorstr(&outputSayang, "입력한 최소 템포 (" + args[1] + ") 는 메이플스토리2에서 지원하는 템포 범위 (32~255) 를 벗어납니다. 하지만 SayangBot이 적당히 바꾸어서 만들어 드릴게요. 악보 코드의 템포가 입력값과 달라도 버그가 아닙니다!");
+					} else {
+						append_warning_to_vectorstr(&outputSayang, "The entered fixed tempo (" + args[1] + ") is outside the tempo range (32~255) supported by MapleStory 2. But SayangBot will change it appropriately and make it for you. It's not a bug if (the tempo of the score chord is different from the input value!");
+					}
+				} else if (args1i < 8 or args1i > 510) {
+					if (!isEnglish) {
+						append_warning_to_vectorstr(&outputSayang, "입력한 최소 템포 (" + args[1] + ") 는 메이플스토리2에서 지원하는 템포 범위 (32~255) 를 벗어납니다. 악보는 만들어지지만 인게임에서 템포 코드가 적용되지 않을 수 있습니다.");
+					} else {
+						append_warning_to_vectorstr(&outputSayang, "The entered fixed tempo (" + args[1] + ") is outside the tempo range (32~255) supported by MapleStory 2. Scores are created, but tempo chords may not be applied in-game.");
+					}
+				}
+				iMinTempo = args1i;
+			} else {
+				if (!isEnglish) {
+					append_warning_to_vectorstr(&outputSayang, "입력한 최소 템포 (" + args[1] + ") 이(가) 적절하지 않아 무시됩니다. 최소 템포는 숫자로 입력해 주세요.");
+				} else {
+					append_warning_to_vectorstr(&outputSayang, "The entered fixed tempo (" + args[1] + ") is invalid and will be ignored. Please enter a fixed tempo as a number.");
+				}
+			}
+			args.erase(args.begin()); args.erase(args.begin());
 		} else if (args[0] == "악기") {
 			vector<int> instrumentKeyList = instrumentName2num(args[1]);
 			if (instrumentKeyList[0] != -1) {
@@ -654,6 +680,8 @@ void read_input() {
 	inputSayang.push_back(to_string(lengthHorizontalDivision));
 	inputSayang.push_back("iFixedTempo");
 	inputSayang.push_back(to_string(iFixedTempo));
+	inputSayang.push_back("iMinTempo");
+	inputSayang.push_back(to_string(iMinTempo));
 	inputSayang.push_back("maxCutLength");
 	inputSayang.push_back(to_string(maxCutLength));
 	inputSayang.push_back("timeStartNote");
@@ -669,7 +697,7 @@ void read_input() {
 		inputSayang.push_back(to_string(iFixedInstrument[iInstr]));
 	}
 	
-	write_file_from_string_vector_with_endl("01input.sayang", inputSayang);
+	write_file_from_string_vector_with_endl("01input.sayang_"+to_string(MYPE), inputSayang);
 	
 	return;
 }

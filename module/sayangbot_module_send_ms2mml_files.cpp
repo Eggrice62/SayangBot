@@ -94,7 +94,7 @@ void send_ms2mml_files() {
 			append_warning_to_vectorstr(&outputSayang, "The number of players in the created ensemble score exceeds 10. In MapleStory 2, there is a case where an ensemble of more than 10 people was divided into two parties and assembled and then started and played at the same time, but there must be a player using two computers. If you want to reduce the number of characters by reducing the number of characters in the score, try using it with $prefix$ensemble resolution 5 mergesustain 2, etc.");
 		}
 	}
-	if (sumNotPercurssion > 10) {
+	if (sumNotPercurssion > 10 && (lOnoffVerticalDivision || command=="합주악보")) {
 		if (!isEnglish) {
 			append_warning_to_vectorstr(&outputSayang, "이 합주 악보는 메이플스토리2에서 정상적으로 연주되지 않을 가능성이 큽니다. 큰북/작은북/심벌즈를 제외한 악기가 10개 이하여야 합니다.");
 		} else {
@@ -113,13 +113,13 @@ void send_ms2mml_files() {
 	} else if (writtenFileList_final.size() == 1) {
 		outputFileSendName = writtenFileList_final[0];
 	} else {
-		string commandZip = "rm out100.zip 2> /dev/null";
+		string commandZip = string("rm out100") + ((MYPE==0)?"_0":"_1") + ".zip 2> /dev/null";
 		int resultZip = system(commandZip.c_str());
 		for (int i=0; i<writtenFileList_final.size(); i++) {
-			commandZip = "zip out100.zip \"" + writtenFileList_final[i] + "\"";
+			commandZip = string("zip out100") + ((MYPE==0)?"_0":"_1") + ".zip \"" + writtenFileList_final[i] + "\"";
 			int resultZip = system(commandZip.c_str());
 		}
-		outputFileSendName = "out100.zip";
+		outputFileSendName = string("out100") + ((MYPE==0)?"_0":"_1") + ".zip";
 	}
 	
 	string tempstring = "";

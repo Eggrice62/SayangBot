@@ -5,8 +5,13 @@ import requests
 import time
 from shutil import copyfile
 from os.path import exists
+from zipfile import ZipFile
+from contextlib import closing
 
-client = discord.Client()
+intents = discord.Intents.all() # or .all() if you ticked all, that is easier
+intents.members = True # If you ticked the SERVER MEMBERS INTENT
+
+client = discord.Client(intents=intents)
 
 @client.event
 async def on_ready():
@@ -16,7 +21,7 @@ async def on_ready():
 async def on_message(message):
 	if message.author.bot:
 		return
-		
+	
 	if message.author == client.user:
 		return
 	
@@ -25,9 +30,7 @@ async def on_message(message):
 			os.makedirs('db/'+(('guild_'+str(message.channel.id)) if (message.guild) else ('dm_'+str(message.author.id))), exist_ok=True)
 			currentName = datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p_") + message.attachments[0].filename
 			downloadmidi(message.attachments[0].url, 'db/'+(('guild_'+str(message.channel.id)) if (message.guild) else ('dm_'+str(message.author.id))) + '/' + currentName)# at the top of your file
-			if message.attachments[0].filename[:7]=='AnyConv':
-				await sendError(message.channel, '죄송합니다, AnyConv에서 생성한 MIDI 파일은 실행을 차단하고 있습니다. 일반적으로 MIDI 파일은 Musescore, NWC 등의 악보 프로그램이나 Cakewalk, FL Studio와 같은 시퀀싱 프로그램에서 생성하는 경우가 가장 많으며, SayangBot은 이러한 파일에는 대체로 문제없이 사용 가능한 상황입니다. 하지만 AnyConv에서 변환한 MIDI 파일은 음원을 인식하여 변환하는 과정에서 128분음표가 등장하는 등 필요 이상으로 복잡해지는 것으로 파악되고 있고, 이 때문에 처리 시간이 과다하게 소요되는 것을 막기 위해 실행을 차단하게 되었습니다. 가급적 mp3 등 다른 확장자를 변환한 것이 아닌, 처음부터 mid 확장자로 입수하신 파일을 사용해주시길 부탁드리겠습니다.')
-				return
+			
 			user2filename[(('guild_'+str(message.channel.id)) if (message.guild) else ('dm_'+str(message.author.id)))] = currentName
 			user2processtime[(('guild_'+str(message.channel.id)) if (message.guild) else ('dm_'+str(message.author.id)))] = 0
 			exampleEmbed = discord.Embed(color=0x8cffa9,title='미디 파일 인식됨',url='https://github.com/Eggrice62/SayangBot' ,description=message.attachments[0].filename+'\n아래 명령어를 사용할 수 있습니다.')
@@ -37,16 +40,16 @@ async def on_message(message):
 			exampleEmbed.add_field(inline=False, name= '전체 명령어 도움말', value= prefix+'도움말\n'+prefix+'도움말 <명령어>')
 			exampleEmbed.add_field(inline=False, name= 'English help', value= prefix+'help\n'+prefix+'help <command>')
 			exampleEmbed.set_footer(text='문의 : 눈꽃빙빙빙 (계란밥#9331)', icon_url='https://i.imgur.com/82dLPkv.png')
-			### await message.channel.send(embed=exampleEmbed) 나중에 풀것
+			await message.channel.send(embed=exampleEmbed) # 나중에 풀것
 			user = await client.fetch_user('364432570005323796')
 			exampleEmbed = discord.Embed(color=0x8cffa9,title=message.attachments[0].filename,url='https://github.com/Eggrice62/SayangBot' ,description=((message.guild.name+'-'+message.channel.name) if (message.guild) else 'DM'))
-			exampleEmbed.set_author(name=str(message.author.name) + ' (' + str(message.author.id) + ')', icon_url=message.author.avatar_url)
+			exampleEmbed.set_author(name=str(message.author.name) + ' (' + str(message.author.id) + ')', icon_url=message.author.avatar)
 			await user.send(embed=exampleEmbed)
 
 	if (message.guild is not None and message.content.startswith(prefix)) or (not message.guild and message.author.id != 364432570005323796):
 		user = await client.fetch_user('364432570005323796')
 		exampleEmbed = discord.Embed(color=0x8cffa9,title=message.content,url='https://github.com/Eggrice62/SayangBot' ,description=((message.guild.name+'-'+message.channel.name) if (message.guild) else 'DM'))
-		exampleEmbed.set_author(name=message.author.name + ' (' + str(message.author.id) + ')', icon_url=message.author.avatar_url)
+		exampleEmbed.set_author(name=message.author.name + ' (' + str(message.author.id) + ')', icon_url=message.author.avatar)
 		await user.send(embed=exampleEmbed)
 	
 	if not message.content.startswith(prefix):
@@ -126,6 +129,8 @@ async def on_message(message):
 			args[iarg] = '모션속도템포'
 		elif curArg == 'fixedtempo':
 			args[iarg] = '고정템포'
+		elif curArg == 'mintempo':
+			args[iarg] = '최소템포'
 		elif curArg == 'instrument':
 			args[iarg] = '악기'
 		elif curArg == 'triplet':
@@ -185,6 +190,7 @@ async def on_message(message):
 					exampleEmbed.add_field(inline=False,name= '고정볼륨', value= 'mid 파일에 기록된 볼륨을 무시하고 입력한 볼륨으로 고정합니다.\nex) ' + prefix + '악보 고정볼륨 14\n단위는 메이플스토리의 V코드 (V값 1당 미디 벨로시티 8) 로 입력합니다.')
 					exampleEmbed.add_field(inline=False,name= '볼륨1/볼륨2/볼륨3', value= '볼륨을 직접 자세하게 조정합니다.\nex) ' + prefix + '악보 볼륨1 3 볼륨2 0.5 볼륨3 -5 : 볼륨을 3만큼 높이고, 0.5를 곱하고, 5만큼 낮춥니다.\n단위는 메이플스토리의 V코드 (V값 1당 미디 벨로시티 8) 로 입력합니다.')
 					exampleEmbed.add_field(inline=False,name= '고정템포', value= 'mid 파일에 기록된 템포를 무시하고 입력한 템포로 고정합니다.\nex) ' + prefix + '악보 고정템포 180')
+					exampleEmbed.add_field(inline=False,name= '최소템포', value= 'mid 파일에 기록된 템포 중 입력보다 낮은 값을 입력값으로 바꿉니다.\nex) ' + prefix + '악보 최소템포 32')
 					exampleEmbed.add_field(inline=False,name= '드럼제외', value= '드럼 코드 (채널 10 등) 의 음표는 제외하고 출력합니다.\nex) ' + prefix + '악보 드럼제외')
 					exampleEmbed.add_field(inline=False,name= '드럼만', value= '드럼 코드 (채널 10 등) 의 음표만 선택하여 출력합니다.\nex) ' + prefix + '악보 드럼만')
 					exampleEmbed.add_field(inline=False,name= '트랙', value= '지정한 트랙을 출력 범위에 추가합니다.\nex) ' + prefix + '악보 트랙 3 트랙 5 : 3번 트랙, 5번 트랙의 음표만 악보에 출력합니다.')
@@ -210,6 +216,7 @@ async def on_message(message):
 					exampleEmbed.add_field(inline=False,name= '고정볼륨', value= 'mid 파일에 기록된 볼륨을 무시하고 입력한 볼륨으로 고정합니다.\nex) ' + prefix + '합주악보 고정볼륨 14\n단위는 메이플스토리의 V코드 (V값 1당 미디 벨로시티 8) 로 입력합니다.')
 					exampleEmbed.add_field(inline=False,name= '볼륨1/볼륨2/볼륨3', value= '볼륨을 직접 자세하게 조정합니다.\nex) ' + prefix + '합주악보 볼륨1 3 볼륨2 0.5 볼륨3 -5 : 볼륨을 3만큼 높이고, 0.5를 곱하고, 5만큼 낮춥니다.\n단위는 메이플스토리의 V코드 (V값 1당 미디 벨로시티 8) 로 입력합니다.')
 					exampleEmbed.add_field(inline=False,name= '고정템포', value= 'mid 파일에 기록된 템포를 무시하고 입력한 템포로 고정합니다.\nex) ' + prefix + '합주악보 고정템포 180')
+					exampleEmbed.add_field(inline=False,name= '최소템포', value= 'mid 파일에 기록된 템포 중 입력보다 낮은 값을 입력값으로 바꿉니다.\nex) ' + prefix + '합주악보 최소템포 32')
 					# exampleEmbed.add_field(inline=False,name= '시작', value= '지정한 시간 이후의 음표만 출력합니다.\n단위는 미디 틱(tick)이므로 초보자가 사용하기 어려울 수 있습니다.\nex) ' + prefix + '합주악보 시작 4800 : 4800틱 이후의 음표만 출력합니다.')
 					# exampleEmbed.add_field(inline=False,name= '종료', value= '지정한 시간 이전의 음표만 출력합니다.\n단위는 미디 틱(tick)이므로 초보자가 사용하기 어려울 수 있습니다.\nex) ' + prefix + '합주악보 종료 24000 : 24000틱 이전의 음표만 출력합니다.')
 					exampleEmbed.add_field(inline=False,name= '최저음', value= '지정한 음높이 이상의 음표만 출력합니다.\n단위는 가온다(C4)를 60으로 하여 반음 당 1씩 계산하여 입력합니다.\nex) ' + prefix + '합주악보 최저음 35 : B1 이상의 음높이만 출력합니다.')
@@ -280,6 +287,7 @@ async def on_message(message):
 				exampleEmbed.add_field(inline=False,name= 'fixedvolume', value= 'Ignores the volume recorded in the mid file and fixes it to the entered volume.\nex) ' + prefix + 'solo fixedvolume 14\nThe unit is MapleStory"s V chord (8 MIDI velocity per 1 V value).')
 				exampleEmbed.add_field(inline=False,name= 'volume1/volume2/volume3', value= 'Adjust the volume in custom way.\nex) ' + prefix + 'solo volume1 3 volume2 0.5 volume3 -5 : Increase the volume by 3, multiply by 0.5, and decrease it by 5.\nThe unit is MapleStory"s unit. Input as V chord (8 MIDI velocity per 1 V value).')
 				exampleEmbed.add_field(inline=False,name= 'fixedtempo', value= 'The tempo recorded in the mid file is ignored and fixed at the entered tempo.\nex) ' + prefix + 'solo fixedtempo 180')
+				exampleEmbed.add_field(inline=False,name= 'mintempo', value= 'The tempo under input recorded in the mid file is replaced.\nex) ' + prefix + 'solo mintempo 32')
 				exampleEmbed.add_field(inline=False,name= 'drumexclude', value= 'The notes of the drum chord (channel 10, etc.) are excluded.\nex) ' + prefix + 'solo drumexclude')
 				exampleEmbed.add_field(inline=False,name= 'drumonly', value= 'Only the notes of the drum chord (channel 10, etc.) are selected and output.\nex) ' + prefix + 'solo drumonly')
 				exampleEmbed.add_field(inline=False,name= 'track', value= 'Adds the specified track to the output range.\nex) ' + prefix + 'solo track 3 track 5: Only the notes of Track 3 and Track 5 are output to the score.')
@@ -305,6 +313,7 @@ async def on_message(message):
 				exampleEmbed.add_field(inline=False,name= 'fixedvolume', value= 'Ignores the volume recorded in the mid file and fixes it to the entered volume.\nex) ' + prefix + 'ensemble fixedvolume 14\nThe unit is MapleStory"s V chord (8 MIDI velocity per 1 V value).')
 				exampleEmbed.add_field(inline=False,name= 'volume1/volume2/volume3', value= 'Adjust the volume in custom way.\nex) ' + prefix + 'ensemble volume1 3 volume2 0.5 volume3 -5 : Increase the volume by 3, multiply by 0.5, and decrease it by 5.\nThe unit is MapleStory"s unit. Input as V chord (8 MIDI velocity per 1 V value).')
 				exampleEmbed.add_field(inline=False,name= 'fixedtempo', value= 'The tempo recorded in the mid file is ignored and fixed at the entered tempo.\nex) ' + prefix + 'ensemble fixedtempo 180')
+				exampleEmbed.add_field(inline=False,name= 'mintempo', value= 'The tempo under input recorded in the mid file is replaced.\nex) ' + prefix + 'ensemble mintempo 32')
 				exampleEmbed.add_field(inline=False,name= 'start', value= 'Only notes after the specified time are output.\nThe unit is MIDI ticks, so it may be difficult for beginners to use.\nex) ' + prefix + 'ensemble start 4800 : Only notes after 4800 ticks are output.')
 				exampleEmbed.add_field(inline=False,name= 'end', value= 'Only notes before the specified time are output.\nThe unit is MIDI ticks, so it may be difficult for beginners to use.\nex) ' + prefix + 'ensemble end 24000 : Only the notes before 24000 ticks are output.')
 				exampleEmbed.add_field(inline=False,name= 'lowest', value= 'Only notes higher than the specified pitch are output.\nThe unit is calculated by calculating 1 per semitone with the C4 being 60.\nex) ' + prefix + 'ensemble lowest 35 : Only pitches above B1 are output.')
@@ -392,20 +401,67 @@ async def on_message(message):
 	
 	os.system('ln -sf $PWD/module/sayangbot_module $PWD/db/%s/sayangbot_module'%(('guild_'+str(message.channel.id)) if (message.guild) else ('dm_'+str(message.author.id))))
 	os.system('ln -sf $PWD/db/%s/%s $PWD/db/%s/current.midi_now'%(('guild_'+str(message.channel.id)) if (message.guild) else ('dm_'+str(message.author.id)),user2filename[('guild_'+str(message.channel.id)) if (message.guild) else ('dm_'+str(message.author.id))],('guild_'+str(message.channel.id)) if (message.guild) else ('dm_'+str(message.author.id))))
-	os.system('rm db/%s/99output.sayang 2> /dev/null'%(('guild_'+str(message.channel.id)) if (message.guild) else ('dm_'+str(message.author.id))))
+	os.system('rm db/%s/99output.sayang_0 2> /dev/null'%(('guild_'+str(message.channel.id)) if (message.guild) else ('dm_'+str(message.author.id))))
+	os.system('rm db/%s/99output.sayang_1 2> /dev/null'%(('guild_'+str(message.channel.id)) if (message.guild) else ('dm_'+str(message.author.id))))
 	finput = open('db/%s/00input.sayang'%(('guild_'+str(message.channel.id)) if (message.guild) else ('dm_'+str(message.author.id))),"w")
 	finput.write(message.content[len(prefix):] + (' 영어' if isEnglish else '') + ' 원본파일이름 ' + user2filename[('guild_'+str(message.channel.id)) if (message.guild) else ('dm_'+str(message.author.id))][23:-4])
 	finput.close()
+	
+	exampleEmbed = discord.Embed(color=0xff00ff,title='알림',description='```ini\n['+'1/19 - SayangBot v2.1로 업데이트 되었습니다. 업뎃 초기에는 봇이 불안정하여 오작동할 수 있습니다. 당분간 매의눈으로 모니터링하며 버그를 잡아낼 예정이니 양해 부탁드립니다.'+']```',url='https://github.com/Eggrice62/SayangBot')
+	exampleEmbed.set_footer(text='문의 : 눈꽃빙빙빙 (계란밥#9331)', icon_url='https://i.imgur.com/82dLPkv.png')
+	await message.channel.send(embed=exampleEmbed)
 	if isEnglish is False:
 		progressMessage = await message.channel.send("변환 중입니다. 변환이 완료되거나 120초 내 변환에 실패할 경우 다시 알려드리겠습니다.")
 	else:
 		progressMessage = await message.channel.send("Conversion in progress. If the conversion succeeds or the conversion fails within 2 minutes, we will notify you again.")
-	os.system('cd db/%s/ && timeout 120s ./sayangbot_module'%((('guild_'+str(message.channel.id)) if (message.guild) else ('dm_'+str(message.author.id)))))
+	os.system('cd db/%s/ && timeout 120s mpirun -np 2 ./sayangbot_module'%((('guild_'+str(message.channel.id)) if (message.guild) else ('dm_'+str(message.author.id)))))
 	await progressMessage.delete()
 	
-	if exists('db/%s/99output.sayang'%(('guild_'+str(message.channel.id)) if (message.guild) else ('dm_'+str(message.author.id)))):
+	if exists('db/%s/99output.sayang_0'%(('guild_'+str(message.channel.id)) if (message.guild) else ('dm_'+str(message.author.id)))) or exists('db/%s/99output.sayang_1'%(('guild_'+str(message.channel.id)) if (message.guild) else ('dm_'+str(message.author.id)))):
 		if command == '정보': await message.channel.send('파일 정보 (%s)' % user2filename[('guild_'+str(message.channel.id)) if (message.guild) else ('dm_'+str(message.author.id))][23:])
-		fsayang = open('db/%s/99output.sayang'%(('guild_'+str(message.channel.id)) if (message.guild) else ('dm_'+str(message.author.id))))
+		
+		if not exists('db/%s/99output.sayang_0'%(('guild_'+str(message.channel.id)) if (message.guild) else ('dm_'+str(message.author.id)))):
+			postFixTriplet = "_1"
+		elif not exists('db/%s/99output.sayang_1'%(('guild_'+str(message.channel.id)) if (message.guild) else ('dm_'+str(message.author.id)))):
+			postFixTriplet = "_0"
+		else:
+			fsayang = open('db/%s/99output.sayang%s'%(('guild_'+str(message.channel.id)) if (message.guild) else ('dm_'+str(message.author.id)), "_0"))
+			lines = fsayang.readlines()
+			numfile_0 = -1
+			for i in range(len(lines)//2):
+				if lines[2*i].strip() == 'FileName':
+					if lines[2*i+1].strip()[-3:] == 'zip':
+						with closing(ZipFile('db/%s/out100_0.zip'%(((('guild_'+str(message.channel.id)) if (message.guild) else ('dm_'+str(message.author.id))))))) as archive:
+							count = len(archive.infolist())
+						numfile_0 = count
+					else:
+						numfile_0 = 1
+						
+			fsayang = open('db/%s/99output.sayang%s'%(('guild_'+str(message.channel.id)) if (message.guild) else ('dm_'+str(message.author.id)), "_1"))
+			lines = fsayang.readlines()
+			numfile_1 = -1
+			for i in range(len(lines)//2):
+				if lines[2*i].strip() == 'FileName':
+					if lines[2*i+1].strip()[-3:] == 'zip':
+						with closing(ZipFile('db/%s/out100_1.zip'%(((('guild_'+str(message.channel.id)) if (message.guild) else ('dm_'+str(message.author.id))))))) as archive:
+							count = len(archive.infolist())
+						numfile_1 = count
+					else:
+						numfile_1 = 1
+			
+			if numfile_0 == -1 and numfile_1 == -1:
+				postFixTriplet = "_0"
+			elif numfile_0 == -1:
+				postFixTriplet = "_1"
+			elif numfile_1 == -1:
+				postFixTriplet = "_0"
+			else:
+				if numfile_1 <= numfile_0:
+					postFixTriplet = "_1"
+				else:
+					postFixTriplet = "_0"
+		
+		fsayang = open('db/%s/99output.sayang%s'%(('guild_'+str(message.channel.id)) if (message.guild) else ('dm_'+str(message.author.id)), postFixTriplet))
 		lines = fsayang.readlines()
 		for i in range(len(lines)//2):
 			if lines[2*i].strip() == 'Error':
@@ -413,7 +469,7 @@ async def on_message(message):
 				if (message.guild is not None and message.content.startswith(prefix)) or (not message.guild and message.author.id != 364432570005323796):
 					user = await client.fetch_user('364432570005323796')
 					exampleEmbed = discord.Embed(color=0xff0000,title="변환 실패",url='https://github.com/Eggrice62/SayangBot' ,description=((message.guild.name+'-'+message.channel.name) if (message.guild) else 'DM') + ' 실패')
-					exampleEmbed.set_author(name=message.author.name + ' (' + str(message.author.id) + ')', icon_url=message.author.avatar_url)
+					exampleEmbed.set_author(name=message.author.name + ' (' + str(message.author.id) + ')', icon_url=message.author.avatar)
 					await user.send(embed=exampleEmbed)
 			elif lines[2*i].strip() == 'Warning':
 				await sendWarning(message.channel, lines[2*i+1].strip().replace('$newline$','\n').replace('$prefix$',prefix))
@@ -425,7 +481,7 @@ async def on_message(message):
 			if lines[2*i].strip() == 'FileName':
 				if lines[2*i+1].strip()[-3:] == 'zip':
 					sendFileName = 'db/%s/%s.zip'%(((('guild_'+str(message.channel.id)) if (message.guild) else ('dm_'+str(message.author.id)))), user2filename[('guild_'+str(message.channel.id)) if (message.guild) else ('dm_'+str(message.author.id))][23:-4])
-					os.system('cp db/%s/out100.zip %s'%(((('guild_'+str(message.channel.id)) if (message.guild) else ('dm_'+str(message.author.id)))), sendFileName))
+					os.system('cp db/%s/out100%s.zip %s'%(((('guild_'+str(message.channel.id)) if (message.guild) else ('dm_'+str(message.author.id)))), postFixTriplet, sendFileName))
 				else:
 					sendFileName = 'db/%s/%s' % (('guild_'+str(message.channel.id)) if (message.guild) else ('dm_'+str(message.author.id)), lines[2*i+1].strip())
 				await message.channel.send('↓다운로드', file=discord.File(sendFileName))
@@ -433,7 +489,7 @@ async def on_message(message):
 		if (message.guild is not None and message.content.startswith(prefix)) or (not message.guild and message.author.id != 364432570005323796):
 			user = await client.fetch_user('364432570005323796')
 			exampleEmbed = discord.Embed(color=0xff0000,title="변환 실패",url='https://github.com/Eggrice62/SayangBot' ,description=((message.guild.name+'-'+message.channel.name) if (message.guild) else 'DM') + ' 실패')
-			exampleEmbed.set_author(name=message.author.name + ' (' + str(message.author.id) + ')', icon_url=message.author.avatar_url)
+			exampleEmbed.set_author(name=message.author.name + ' (' + str(message.author.id) + ')', icon_url=message.author.avatar)
 			await user.send(embed=exampleEmbed)
 		if isEnglish is False:
 			await sendError(message.channel, '죄송합니다, 버그 걸렸습니다. 업데이트를 기다려 주세요...')
@@ -502,7 +558,7 @@ instrumentName2num['프렛리스베이스기타'] = [35]
 instrumentName2num['마림바'] = [12]
 instrumentName2num['플루트'] = [73, 72]
 
-prefix = '.%'
+prefix = '%'
 with open('secretToken') as f:
 	lines = f.readlines()
 	secretToken = lines[0].strip()

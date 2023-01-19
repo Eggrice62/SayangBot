@@ -161,6 +161,6 @@ void do_information() {
 	tempMessage[tempMessage.size()-1] += "$newline$```";
 	
 	for (int iMessage=0; iMessage<tempMessage.size(); iMessage++) {
-		append_text_to_vectorstr(&outputSayang, tempMessage[iMessage]);
+		append_text_to_vectorstr(&outputSayang, replace_all(tempMessage[iMessage],"\n",""));
 	}
 }

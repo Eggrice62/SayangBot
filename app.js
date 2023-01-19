@@ -1934,11 +1934,11 @@ const handleMessage = (message, client) => {
 									isBasic = true;
 									for (inote=0; inote<Notes_before_command.length; inote++) {
 										if (Notes_before_command[inote][6] == 128) {
-											if (Notes_before_command[inote][2] == 35) { continue; }
+											// if (Notes_before_command[inote][2] == 35) { continue; }
 											if (Notes_before_command[inote][2] == 36) { continue; }
 											if (Notes_before_command[inote][2] == 38) { continue; }
-											if (Notes_before_command[inote][2] == 40) { continue; }
-											if (Notes_before_command[inote][2] == 49) { continue; }
+											// if (Notes_before_command[inote][2] == 40) { continue; }
+											// if (Notes_before_command[inote][2] == 49) { continue; }
 											if (Notes_before_command[inote][2] == 57) { continue; }
 											isBasic = false;
 										}
@@ -2007,17 +2007,17 @@ const handleMessage = (message, client) => {
 								percCheck = true;
 							} else if (supportedInstrList[0]>128) {
 								if (Notes_before_command[inote][6] == 128 && supportedInstrList[0] == 129 && Notes_before_command[inote][2] == 57) { percCheck = true; }
-								if (Notes_before_command[inote][6] == 128 && supportedInstrList[0] == 129 && Notes_before_command[inote][2] == 49) { percCheck = true; }
-								if (Notes_before_command[inote][6] == 128 && supportedInstrList[0] == 130 && Notes_before_command[inote][2] == 35) { percCheck = true; }
+								// if (Notes_before_command[inote][6] == 128 && supportedInstrList[0] == 129 && Notes_before_command[inote][2] == 49) { percCheck = true; }
+								// if (Notes_before_command[inote][6] == 128 && supportedInstrList[0] == 130 && Notes_before_command[inote][2] == 35) { percCheck = true; }
 								if (Notes_before_command[inote][6] == 128 && supportedInstrList[0] == 130 && Notes_before_command[inote][2] == 36) { percCheck = true; }
 								if (Notes_before_command[inote][6] == 128 && supportedInstrList[0] == 131 && Notes_before_command[inote][2] == 38) { percCheck = true; }
-								if (Notes_before_command[inote][6] == 128 && supportedInstrList[0] == 131 && Notes_before_command[inote][2] == 40) { percCheck = true; }
+								// if (Notes_before_command[inote][6] == 128 && supportedInstrList[0] == 131 && Notes_before_command[inote][2] == 40) { percCheck = true; }
 								if (Notes_before_command[inote][6] == 128 && supportedInstrList[0] == 132 && Notes_before_command[inote][2] != 57
-																											&& Notes_before_command[inote][2] != 49
-																											&& Notes_before_command[inote][2] != 35
+																											// && Notes_before_command[inote][2] != 49
+																											// && Notes_before_command[inote][2] != 35
 																											&& Notes_before_command[inote][2] != 36
-																											&& Notes_before_command[inote][2] != 38
-																											&& Notes_before_command[inote][2] != 40) { percCheck = true; }
+																											&& Notes_before_command[inote][2] != 38) { percCheck = true; }
+																											// && Notes_before_command[inote][2] != 40
 							}
 							if (percCheck) { Notes = Notes.concat([Notes_before_command[inote]]); }
 						}

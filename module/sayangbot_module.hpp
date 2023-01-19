@@ -2,6 +2,9 @@
 #include <fstream>
 #include <vector>
 #include <cstdlib>
+#include "mpi.h"
+int NUMPROC;
+int MYPE;
 
 using namespace std;
 
@@ -61,6 +64,7 @@ int iOnoffDrum = 0;
 int iMethodDup = 1;
 int lengthHorizontalDivision = 10000;
 int iFixedTempo = -1;
+int iMinTempo = -1;
 int maxCutLength = 0;
 int timeStartNote = 0;
 int timeEndNote = 2147483647;
@@ -122,6 +126,7 @@ int currentCopyrightIndex = 0;
 // for (i=0; i<tracks; i++) { for (j=0; j<iMaxKeySignature; j++) { for (k=0; k<2; k++) { timekeymat[i][j][k] = -1; } } }
 vector<int> cuttableMat;
 vector<int> icuttable;
+vector<int> quarterMat;
 
 string outputtxt;
 string outputtxtRollback;
@@ -541,4 +546,23 @@ vector<int> get_length_list2_nonexpand(int dur, int tpq, int resolution) {
 	}
 	
 	return larray;
+}
+
+string replace_all(
+	const string &message, 
+	const string &pattern, 
+	const string &replace
+	) {
+	
+	string result = message;
+	string::size_type pos = 0;
+	string::size_type offset = 0;
+	
+	while ((pos = result.find(pattern, offset)) != string::npos)
+	{
+		result.replace(result.begin() + pos, result.begin() + pos + pattern.size(), replace);
+		offset = pos + replace.size();
+	}
+	
+	return result;
 }

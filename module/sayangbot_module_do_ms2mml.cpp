@@ -216,7 +216,7 @@ void do_ms2mml() {
 		append_warning_to_vectorstr(&outputSayang, tempMessage);
 	}
 	
-	ofstream outputMidiListInstrItems("11listInstrItems.sayang");
+	ofstream outputMidiListInstrItems("11listInstrItems.sayang_"+to_string(MYPE));
 	for (int ittemp=0; ittemp<listInstrItems.size(); ittemp++) {
 		outputMidiListInstrItems << ittemp << " - ";
 		for (int jttemp=0; jttemp<listInstrItems[ittemp].size(); jttemp++) {
@@ -227,7 +227,7 @@ void do_ms2mml() {
 	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////
-	ofstream outputMidiStrings("20strings.sayang");
+	ofstream outputMidiStrings("20strings.sayang_"+to_string(MYPE));
 	
 	for (int iInstrMain=0; iInstrMain<listInstrItems.size(); iInstrMain++) {
 		writtenFileList[writtenFileList.size()-1].push_back(vector<string> {});
@@ -261,7 +261,7 @@ void do_ms2mml() {
 			}
 			if (percCheck) { Notes.push_back(Notes_before_command[inote]); }
 		}
-		ofstream outputMidiNotes4("165notes_filtered.sayang");
+		ofstream outputMidiNotes4("165notes_filtered.sayang_"+to_string(MYPE));
 		int tempNoteSize = Notes.size();
 		for (int i=0; i<tempNoteSize; i++) {
 			outputMidiNotes4 << Notes[i][0] << '\t' << Notes[i][1] << '\t' << Notes[i][2] << '\t' << Notes[i][3] << '\t' << Notes[i][4] << '\t' << Notes[i][5] << '\t' << Notes[i][6] << '\n';
@@ -306,9 +306,10 @@ void do_ms2mml() {
 		int iCurrentWriteHorizontal = 0;
 		int iCurrentWriteVertical = 0;
 		bool isFirstChord = true;
+		int tempCutIndex = 0;
 		if (lOnoffHorizontalDivision) {
 			icuttable = vector<int> (3, -1);
-			int tempCutIndex = 0;
+			tempCutIndex = 0;
 			while (cuttableMat[tempCutIndex] < timeStartNote) {
 				tempCutIndex++;
 			}
@@ -347,6 +348,16 @@ void do_ms2mml() {
 					tempCuttableIndex = (int)((icuttable[1]+icuttable[2])/2);
 					tempTimeStartNote = cuttableMat[icuttable[0]];
 					tempTimeEndNote = cuttableMat[tempCuttableIndex];
+				}
+			}
+			int tempTimeStartNote_orig = tempTimeStartNote;
+			if (MYPE==1) {
+				if (quarterMat.size() > 0) {
+					int indexQuarter = 0;
+					while (indexQuarter + 1 < quarterMat.size() && quarterMat[indexQuarter+1] <= tempTimeStartNote) {
+						indexQuarter++;
+					}
+					tempTimeStartNote = quarterMat[indexQuarter];
 				}
 			}
 			
@@ -396,7 +407,6 @@ void do_ms2mml() {
 					}
 					if (tempomat[i][0] < tempTimeStartNote) { isRemoved = true; }
 					if (tempomat[i][0] > tempTimeEndNote) { isRemoved = true; }
-					if (tempomat[i][0] > maxLengthTrack) { isRemoved = true; }
 					if (isRemoved) {
 						vector<vector<int>> newtempomat {};
 						for (int i2=0; i2<tempomat.size(); i2++) {
@@ -410,7 +420,7 @@ void do_ms2mml() {
 			tempomat.push_back(vector<int> {2147483647, 255});
 			tempomat_orig = tempomat;
 			// console.log(tempomat);
-			ofstream outputMidiTempo("15tempomat.sayang");
+			ofstream outputMidiTempo("15tempomat.sayang_"+to_string(MYPE));
 			for (int iTempo=0; iTempo<tempomat.size(); iTempo++) {
 				outputMidiTempo << tempomat[iTempo][0] << " " << tempomat[iTempo][1] << '\n';
 			}
@@ -428,7 +438,6 @@ void do_ms2mml() {
 							}
 							if (sustainTrackChannel[itrack][ichannel][isus][0] < tempTimeStartNote) { continue; }
 							if (sustainTrackChannel[itrack][ichannel][isus][0] > tempTimeEndNote) { continue; }
-							if (sustainTrackChannel[itrack][ichannel][isus][0] > maxLengthTrack) { continue; }
 							if (sustainTrackChannel[itrack][ichannel][isus][0] < timeStartNote) { continue; }
 							if (sustainTrackChannel[itrack][ichannel][isus][0] > timeEndNote) { continue; }
 							if (count(supportedInstrList.begin(), supportedInstrList.end(), sustainTrackChannel[itrack][ichannel][isus][2]) == 0) { continue; }
@@ -437,7 +446,7 @@ void do_ms2mml() {
 					}
 				}
 			}
-			ofstream outputMidiSustain1("16_1susmat.sayang");
+			ofstream outputMidiSustain1("16_1susmat.sayang_"+to_string(MYPE));
 			for (int iTempo=0; iTempo<susmat.size(); iTempo++) {
 				outputMidiSustain1 << susmat[iTempo][0] << " " << susmat[iTempo][1] << '\n';
 			}
@@ -460,7 +469,7 @@ void do_ms2mml() {
 			// susmat.push_back(vector<int> {2147483647, 0, 0});
 			susmat_orig = susmat;
 			// console.log(susmat);
-			ofstream outputMidiSustain("16susmat.sayang");
+			ofstream outputMidiSustain("16susmat.sayang_"+to_string(MYPE));
 			for (int iTempo=0; iTempo<susmat.size(); iTempo++) {
 				outputMidiSustain << susmat[iTempo][0] << " " << susmat[iTempo][1] << '\n';
 			}
@@ -491,7 +500,7 @@ void do_ms2mml() {
 				if (!listTrackChannel[Notes[inote][0]][Notes[inote][1]]) { continue; }
 				if (Notes[inote][2] < pitchLowerBound) { continue; }
 				if (Notes[inote][2] > pitchUpperBound) { continue; }
-				if (Notes[inote][4] < tempTimeStartNote) { continue; }
+				if (Notes[inote][4] < tempTimeStartNote_orig) { continue; }
 				if (Notes[inote][5] > tempTimeEndNote) { continue; }
 				if (Notes[inote][4] < timeStartNote) { continue; }
 				if (Notes[inote][5] > timeEndNote) { continue; }
@@ -620,7 +629,7 @@ void do_ms2mml() {
 			stable_sort(Notes.begin(), Notes.end(), sortFunctionByStarttime);
 			// console.log(Notes.size());
 			// console.log(Notes);
-			ofstream outputMidiNotes3("17notes_filtered.sayang");
+			ofstream outputMidiNotes3("17notes_filtered.sayang_"+to_string(MYPE));
 			int tempNoteSize = Notes.size();
 			for (int i=0; i<tempNoteSize; i++) {
 				outputMidiNotes3 << Notes[i][0] << '\t' << Notes[i][1] << '\t' << Notes[i][2] << '\t' << Notes[i][3] << '\t' << Notes[i][4] << '\t' << Notes[i][5] << '\t' << Notes[i][6] << '\n';
@@ -1169,10 +1178,6 @@ void do_ms2mml() {
 				lHorizontalDivisionFinished = true;
 				lWrite = true;
 			} else {
-				int tempCutIndex = cuttableMat.size()-1;
-				while (cuttableMat[tempCutIndex] > timeEndNote) {
-					tempCutIndex--;
-				}
 				if (icuttable[1] < 0 && icuttable[2] == tempCutIndex) {
 					if (iSumCountCharacter <= lengthHorizontalDivision) {
 						lHorizontalDivisionFinished = true;
@@ -1188,10 +1193,6 @@ void do_ms2mml() {
 							icuttable[2] = tempCuttableIndex;
 						}
 					} else if (icuttable[2]-icuttable[1] == 1) {
-						tempCutIndex = cuttableMat.size()-1;
-						while (cuttableMat[tempCutIndex] > timeEndNote) {
-							tempCutIndex--;
-						}
 						if ((icuttable[2] == tempCutIndex && iSumCountCharacter > lengthHorizontalDivision) || (icuttable[0] == icuttable[1])) {
 							if (maxLengthTrack/tickperquarter_orig/tempomat.size() < 20) {
 								if (!isEnglish) {
@@ -1214,10 +1215,6 @@ void do_ms2mml() {
 						lWrite = true;
 						icuttable[0] = icuttable[1];
 						icuttable[1] = -1;
-						tempCutIndex = cuttableMat.size()-1;
-						while (cuttableMat[tempCutIndex] > timeEndNote) {
-							tempCutIndex--;
-						}
 						icuttable[2] = tempCutIndex;
 					}
 				}
@@ -1426,6 +1423,7 @@ void do_ms2mml() {
 	
 					string fileExtension = ".ms2mml";
 					if (isMML) { fileExtension = ".mml"; }
+					fileExtension = ((MYPE==0)?"":"_") + fileExtension;
 					if (!lOnoffHorizontalDivision && !tempIOnoffVerticalDivision) {
 						outputFileName += fileExtension;
 					} else if (lOnoffHorizontalDivision && !tempIOnoffVerticalDivision && lHorizontalDivisionFinished && iCurrentWriteHorizontal==1) {

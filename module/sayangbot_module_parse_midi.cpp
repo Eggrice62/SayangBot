@@ -71,7 +71,7 @@ void parse_midi() {
 	
 	vector<vector<customMidiEvent>> customMidifile (tracks, vector<customMidiEvent> {});
 	
-	ofstream outputMidi01("02midi.sayang");
+	ofstream outputMidi01("02midi.sayang_"+to_string(MYPE));
 	outputMidi01 << "TPQ: " << midifile.getTicksPerQuarterNote() << '\n';
 	if (tracks > 1) outputMidi01 << "TRACKS: " << tracks << '\n';
 	for (int track=0; track<tracks; track++) {
@@ -250,6 +250,19 @@ void parse_midi() {
 	}
 	iMaxTempo -= removedElement;
 	
+	if (tempomat.size() == 0 || tempomat[0][0] != 0) {
+		tempomat.insert(tempomat.begin(), vector<int> {0, 2});
+		tempomat[0][1] = 120;
+	}
+	
+	if (iMinTempo != -1) {
+		for (int iTempo=0; iTempo<tempomat.size(); iTempo++) {
+			if (tempomat[iTempo][1] < iMinTempo) {
+				tempomat[iTempo][1] = iMinTempo;
+			}
+		}
+	}
+	
 	if (iFixedTempo != -1) {
 		tempomat = vector<vector<int>> (1, vector<int> {0, iFixedTempo});
 		iMaxTempo = 1;
@@ -400,6 +413,7 @@ void parse_midi() {
 							}
 						}
 					}
+					if (endTime == currentTime) { continue; }
 					vector<int> tempnote {itrack, ichannel, icurrentpitch, icurrentvolume, currentTime, endTime, icurrentinstrument};
 					/*tempnote.track = itrack;
 					tempnote.channel = ichannel;
@@ -505,12 +519,12 @@ void parse_midi() {
 		}
 	}*/
 	
-	ofstream outputMidiTempo("03tempomat.sayang");
+	ofstream outputMidiTempo("03tempomat.sayang_"+to_string(MYPE));
 	for (int iTempo=0; iTempo<iMaxTempo; iTempo++) {
 		outputMidiTempo << tempomat[iTempo][0] << " " << tempomat[iTempo][1] << '\n';
 	}
 	
-	ofstream outputMidiTimedivision("04timedivision.sayang");
+	ofstream outputMidiTimedivision("04timedivision.sayang_"+to_string(MYPE));
 	outputMidiTimedivision << midifile.getTicksPerQuarterNote() << '\n';
 	
 	/*if (command == 'timesigmat') { 
@@ -524,7 +538,7 @@ void parse_midi() {
 		return;
 	}*/
 	
-	ofstream outputMidiSustainTrackChannel("05sustaintrackchannel.sayang");
+	ofstream outputMidiSustainTrackChannel("05sustaintrackchannel.sayang_"+to_string(MYPE));
 	for (int i=0; i<tracks; i++) {
 		outputMidiSustainTrackChannel << "track " << i << '\n';
 		for (int j=0; j<iMaxChannel; j++) {
@@ -536,7 +550,7 @@ void parse_midi() {
 		}
 	}
 	
-	ofstream outputMidiNotes("06notes.sayang");
+	ofstream outputMidiNotes("06notes.sayang_"+to_string(MYPE));
 	int tempNoteSize = Notes.size();
 	for (int i=0; i<tempNoteSize; i++) {
 		outputMidiNotes << Notes[i][0] << '\t' << Notes[i][1] << '\t' << Notes[i][2] << '\t' << Notes[i][3] << '\t' << Notes[i][4] << '\t' << Notes[i][5] << '\t' << Notes[i][6] << '\n';
@@ -544,12 +558,12 @@ void parse_midi() {
 	
 	stable_sort(Notes.begin(), Notes.end(), sortFunctionByStarttime);
 	
-	ofstream outputMidiNotesSorted("07notes_sorted.sayang");
+	ofstream outputMidiNotesSorted("07notes_sorted.sayang_"+to_string(MYPE));
 	for (int i=0; i<Notes.size(); i++) {
 		outputMidiNotesSorted << Notes[i][0] << '\t' << Notes[i][1] << '\t' << Notes[i][2] << '\t' << Notes[i][3] << '\t' << Notes[i][4] << '\t' << Notes[i][5] << '\t' << Notes[i][6] << '\n';
 	}
 	
-	ofstream outputMidiInstr("08currentchannelinstrument.sayang");
+	ofstream outputMidiInstr("08currentchannelinstrument.sayang_"+to_string(MYPE));
 	for (int ichannel=0; ichannel<iMaxChannel; ichannel++) {
 		outputMidiInstr << "channel " << ichannel << '\n';
 		for (int iTempo=0; iTempo<currentchannelinstrument[ichannel].size(); iTempo++) {
@@ -557,7 +571,7 @@ void parse_midi() {
 		}
 	}
 	
-	ofstream outputMidiVolume("09currentchannelvolume.sayang");
+	ofstream outputMidiVolume("09currentchannelvolume.sayang_"+to_string(MYPE));
 	for (int ichannel=0; ichannel<iMaxChannel; ichannel++) {
 		outputMidiVolume << "channel " << ichannel << '\n';
 		for (int iTempo=0; iTempo<currentchannelvolume[ichannel].size(); iTempo++) {
@@ -582,6 +596,10 @@ void parse_midi() {
 	for (int inote=0; inote<Notes.size(); inote++) {
 		if (count(cuttableMat.begin(), cuttableMat.end(), Notes[inote][5])) { continue; }
 		bool isInterrupted = false;
+		// if (Notes[inote][5]%(4*tickperquarter/noteResolution) != 0) {
+			// isInterrupted = true;
+			// continue;
+		// }
 		for (int jnote=0; jnote<inote; jnote++) {
 			if (Notes[jnote][5] > Notes[inote][5] && Notes[jnote][4] < Notes[inote][5]) {
 				isInterrupted = true;
@@ -595,6 +613,10 @@ void parse_midi() {
 	for (int inote=0; inote<Notes.size(); inote++) {
 		if (count(cuttableMat.begin(), cuttableMat.end(), Notes[inote][4])) { continue; }
 		bool isInterrupted = false;
+		// if (Notes[inote][4]%(4*tickperquarter/noteResolution) != 0) {
+			// isInterrupted = true;
+			// continue;
+		// }
 		for (int jnote=0; jnote<Notes.size(); jnote++) {
 			if (Notes[jnote][4] < Notes[inote][4] && Notes[jnote][5] > Notes[inote][4]) {
 				isInterrupted = true;
@@ -610,6 +632,10 @@ void parse_midi() {
 			if (sustainTrackChannel[i][j].size() == 0) { continue; }
 			for (int k=0; k<sustainTrackChannel[i][j].size(); k++) {
 				bool isInterrupted = false;
+				// if (sustainTrackChannel[i][j][k][0]%(4*tickperquarter/noteResolution) != 0) {
+					// isInterrupted = true;
+					// continue;
+				// }
 				for (int jnote=0; jnote<Notes.size(); jnote++) {
 					if (Notes[jnote][4] < sustainTrackChannel[i][j][k][0] && Notes[jnote][5] > sustainTrackChannel[i][j][k][0]) {
 						isInterrupted = true;
@@ -632,7 +658,7 @@ void parse_midi() {
 	
 	stable_sort(cuttableMat.begin(), cuttableMat.end());
 	
-	ofstream outputMidiCuttable("10cuttablemat.sayang");
+	ofstream outputMidiCuttable("10cuttablemat.sayang_"+to_string(MYPE));
 	for (int i=0; i<cuttableMat.size(); i++) {
 		outputMidiCuttable << cuttableMat[i] << '\n';
 	}
@@ -647,7 +673,7 @@ void parse_midi() {
 		while (tempomat[iTempo][1] > 255) { tempomat[iTempo][1] /= 2; }
 	}
 	
-	ofstream outputMidiTempo2("03tempomat_transformed.sayang");
+	ofstream outputMidiTempo2("03tempomat_transformed.sayang_"+to_string(MYPE));
 	for (int iTempo=0; iTempo<iMaxTempo; iTempo++) {
 		outputMidiTempo2 << tempomat[iTempo][0] << " " << tempomat[iTempo][1] << '\n';
 	}
@@ -661,7 +687,7 @@ void parse_midi() {
 		}
 	}
 	
-	ofstream outputMidiSustainTrackChannel2("05sustaintrackchannel_transformed.sayang");
+	ofstream outputMidiSustainTrackChannel2("05sustaintrackchannel_transformed.sayang_"+to_string(MYPE));
 	for (int i=0; i<tracks; i++) {
 		outputMidiSustainTrackChannel2 << "track " << i << '\n';
 		for (int j=0; j<iMaxChannel; j++) {
@@ -678,22 +704,44 @@ void parse_midi() {
 		Notes[i][5] = transform_tempo(Notes[i][5], tempomat_before_transform);
 	}
 	
-	ofstream outputMidiNotes2("06notes_transformed.sayang");
+	ofstream outputMidiNotes2("06notes_transformed.sayang_"+to_string(MYPE));
 	tempNoteSize = Notes.size();
 	for (int i=0; i<tempNoteSize; i++) {
 		outputMidiNotes2 << Notes[i][0] << '\t' << Notes[i][1] << '\t' << Notes[i][2] << '\t' << Notes[i][3] << '\t' << Notes[i][4] << '\t' << Notes[i][5] << '\t' << Notes[i][6] << '\n';
+	}
+	
+	quarterMat = vector<int> {};
+	int currentQuarter = 0;
+	if (cuttableMat.size() > 0) {
+		while (currentQuarter < cuttableMat[cuttableMat.size()-1]) {
+			quarterMat.push_back(currentQuarter);
+			currentQuarter += tickperquarter;
+		}
+	}
+	quarterMat.push_back(currentQuarter);
+	for (int i=0; i<quarterMat.size(); i++) {
+		quarterMat[i] = transform_tempo(quarterMat[i], tempomat_before_transform);
+	}
+	
+	ofstream outputMidiQuarter("10quartermat_transformed.sayang_"+to_string(MYPE));
+	for (int i=0; i<quarterMat.size(); i++) {
+		outputMidiQuarter << quarterMat[i] << '\n';
 	}
 	
 	for (int i=0; i<cuttableMat.size(); i++) {
 		cuttableMat[i] = transform_tempo(cuttableMat[i], tempomat_before_transform);
 	}
 	
-	ofstream outputMidiCuttable2("10cuttablemat_transformed.sayang");
+	ofstream outputMidiCuttable2("10cuttablemat_transformed.sayang_"+to_string(MYPE));
 	for (int i=0; i<cuttableMat.size(); i++) {
 		outputMidiCuttable2 << cuttableMat[i] << '\n';
 	}
 	
-	maxLengthTrack = transform_tempo(maxLengthTrack, tempomat_before_transform);
+	if (!lOnOff_candidate) {
+		maxLengthTrack = transform_tempo(maxLengthTrack, tempomat_before_transform);
+		timeStartNote = transform_tempo(timeStartNote, tempomat_before_transform);
+		timeEndNote = transform_tempo(timeEndNote, tempomat_before_transform);
+	}
 
 	return;
 }
