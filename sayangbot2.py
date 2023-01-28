@@ -236,6 +236,9 @@ async def on_message(message):
 				elif args[0] == '피드백':
 					exampleEmbed = discord.Embed(color=0x8cffa9,title='SayangBot 명령어 (' + prefix + args[0] + ')',url='https://github.com/Eggrice62/SayangBot',description='' + prefix + '피드백 으로 시작하는 메시지는 모두 개발자에게 자동으로 전달됩니다. 자유롭게 적어서 보내주시면 개발에 큰 도움이 됩니다. 감사합니다.')
 					await message.channel.send(embed=exampleEmbed)
+				elif args[0] == '<명령어>':
+					exampleEmbed = discord.Embed(color=0x8cffa9,title='아 그거 그렇게 하는 거 아닌데',url='https://github.com/Eggrice62/SayangBot',description='' + prefix + '<명령어> 라고 적은 것은 예시입니다! ' + prefix + '도움말 악보, ' + prefix + '도움말 합주악보 등으로 사용해 보세요.')
+					await message.channel.send(embed=exampleEmbed)
 				else:
 					await sendError(message.channel, '' + args[0] + (' 은' if checkBatchimEnding(args[0]) else '는') + ' 없는 명령어입니다. 명령어 목록은 ' + prefix + '도움말 을 참고해 주세요.')
 		return
@@ -332,6 +335,9 @@ async def on_message(message):
 				await message.channel.send(embed=exampleEmbed)
 			elif args[0] == 'feedback':
 				exampleEmbed = discord.Embed(color=0x8cffa9,title='SayangBot command (' + prefix + args[0] + ')',url='https://github.com/Eggrice62/SayangBot',description='Any messages that start with ' + prefix + 'feedback are automatically forwarded to the developer. Feel write it down and send it. it will be a great help for development. Thank you.')
+				await message.channel.send(embed=exampleEmbed)
+			elif args[0] == '<command>':
+				exampleEmbed = discord.Embed(color=0x8cffa9,title='???',url='https://github.com/Eggrice62/SayangBot',description='<command> was an example. try ' + prefix + 'help solo, ' + prefix + 'help ensemble.')
 				await message.channel.send(embed=exampleEmbed)
 			else:
 				await sendError(message.channel, '' + args[0] + ' does not exist. For a list of commands, refer to the ' + prefix + 'help')

@@ -985,6 +985,7 @@ void do_ms2mml() {
 					int scalenumber = 0;
 					if (curchord >= 0) {
 						int notenumber = curnote[2];
+						notenumber += iPitchShift;
 						int volnumber = curnote[3];
 						thisoct = ((notenumber-12)/12);
 						thisvol = (int)(((volnumber+volumeAdd1*8.)*volumeMul2+volumeAdd3*8.)/8.+0.51);
@@ -1451,6 +1452,10 @@ void do_ms2mml() {
 					} else {
 						outputFileName = "10000_" + outputFileName;
 						writtenScoreList[writtenScoreList.size()-1][iInstrMain].push_back(10000);
+					}
+					
+					if (iCountCharacterPseudoSustain > 0) {
+						outputFileName = "SUSTAIN_" + outputFileName;
 					}
 					
 					ofstream outputMidiMs2mml(outputFileName);

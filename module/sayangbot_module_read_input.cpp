@@ -435,6 +435,19 @@ void read_input() {
 				}
 			}
 			args.erase(args.begin()); args.erase(args.begin());
+		} else if (args[0] == "조옮김") {
+			stringstream ssInt(args[1]);
+			ssInt >> args1i;
+			if (!ssInt.fail()) {
+				iPitchShift = args1i;
+			} else {
+				if (!isEnglish) {
+					append_warning_to_vectorstr(&outputSayang, "입력한 조옮김 (" + args[1] + ") 이(가) 적절하지 않아 무시됩니다. 조옮김은 숫자로 입력해 주세요.");
+				} else {
+					append_warning_to_vectorstr(&outputSayang, "The entered transpose (" + args[1] + ") is invalid and will be ignored. Please enter a transpose as a number.");
+				}
+			}
+			args.erase(args.begin()); args.erase(args.begin());
 		} else if (args[0] == "악기") {
 			vector<int> instrumentKeyList = instrumentName2num(args[1]);
 			if (instrumentKeyList[0] != -1) {

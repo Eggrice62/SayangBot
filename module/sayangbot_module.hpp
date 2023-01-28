@@ -65,6 +65,7 @@ int iMethodDup = 1;
 int lengthHorizontalDivision = 10000;
 int iFixedTempo = -1;
 int iMinTempo = -1;
+int iPitchShift = 0;
 int maxCutLength = 0;
 int timeStartNote = 0;
 int timeEndNote = 2147483647;
